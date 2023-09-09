@@ -92,7 +92,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var allTestConfigurations =
-                from project in Solution.GetAllProjects("*Tests")
+                from project in Solution.GetAllProjects("*.Test")
                 from targetFramework in project.GetTargetFrameworks()
                 select (project, targetFramework);
 
@@ -101,7 +101,7 @@ class Build : NukeBuild
             try
             {
                 DotNetTest(_ => _
-                        .SetConfiguration(Configuration.Release)
+                        .SetConfiguration(Configuration)
                         .SetNoBuild(InvokedTargets.Contains(Compile))
                         .SetResultsDirectory(TestResultDirectory)
                         .CombineWith(relevantTestConfigurations, (_, v) => _

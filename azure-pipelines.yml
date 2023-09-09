@@ -27,13 +27,6 @@ stages:
               packageType: sdk
               version: 7.x
 
-          - task: Cache@2
-            displayName: "Cache NuGet packages"
-            inputs:
-              key: $(Agent.OS) | **/global.json, **/*.csproj
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-
           - task: CmdLine@2
             displayName: "Run Nuke"
             inputs:

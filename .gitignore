@@ -2,3 +2,5 @@
 # Nuke
 .nuke/temp
 
+# Output
+output/
