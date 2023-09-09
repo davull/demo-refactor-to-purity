@@ -14,24 +14,14 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
-
-    public static int Main() => Execute<Build>(x => x.Compile);
+    [CI] readonly AzurePipelines AzurePipelines;
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution]
-    readonly Solution Solution;
+    [GitRepository] readonly GitRepository Repository;
 
-    [GitRepository]
-    readonly GitRepository Repository;
-
-    [CI] readonly AzurePipelines AzurePipelines;
+    [Solution] readonly Solution Solution;
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
@@ -59,11 +49,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             RootDirectory
-                .GlobDirectories(
-                    "*/src/*/obj",
-                    "*/src/*/bin",
-                    "*/test/*/obj",
-                    "*/test/*/bin")
+                .GlobDirectories("*/src/*/obj", "*/src/*/bin")
                 .ForEach(d => d.DeleteDirectory());
         });
 
@@ -71,7 +57,8 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetRestore(_ => _
-                .SetProjectFile(Solution));
+                .SetProjectFile(Solution)
+                .EnableLockedMode());
         });
 
     Target Compile => _ => _
@@ -84,19 +71,16 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration));
         });
 
-    AbsolutePath TestResultDirectory => RootDirectory / "output" / ".test-results";
+    AbsolutePath TestResultDirectory => OutputDirectory / ".test-results";
 
     Target Test => _ => _
         .DependsOn(Compile)
-        .Partition(4)
         .Executes(() =>
         {
-            var allTestConfigurations =
+            var testConfigurations =
                 from project in Solution.GetAllProjects("*.Test")
                 from targetFramework in project.GetTargetFrameworks()
                 select (project, targetFramework);
-
-            var relevantTestConfigurations = Partition.GetCurrent(allTestConfigurations);
 
             try
             {
@@ -104,7 +88,7 @@ class Build : NukeBuild
                         .SetConfiguration(Configuration)
                         .SetNoBuild(InvokedTargets.Contains(Compile))
                         .SetResultsDirectory(TestResultDirectory)
-                        .CombineWith(relevantTestConfigurations, (_, v) => _
+                        .CombineWith(testConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
                             .SetLoggers($"trx;LogFileName={v.project.Name}.trx")
@@ -113,11 +97,15 @@ class Build : NukeBuild
             }
             finally
             {
-                TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
-                    AzurePipelines?.PublishTestResults(
-                        title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
-                        type: AzurePipelinesTestResultsType.VSTest,
-                        files: new string[] { x }));
+                TestResultDirectory
+                    .GlobFiles("*.trx")
+                    .ForEach(x =>
+                        AzurePipelines?.PublishTestResults(
+                            $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
+                            AzurePipelinesTestResultsType.VSTest,
+                            new string[] { x }));
             }
         });
+
+    public static int Main() => Execute<Build>(x => x.Compile);
 }
