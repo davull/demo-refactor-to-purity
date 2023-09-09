@@ -8,6 +8,7 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -38,6 +39,10 @@ class Build : NukeBuild
             Log.Information("SSH URL            = {Value}", Repository.SshUrl);
 
             Log.Information("Solution           = {Value}", Solution);
+            Log.Information("Configuration      = {Value}", Configuration);
+            Log.Information("SemVer             = {Value}", GitVersioning.SemVer);
+            Log.Information("FullSemVer         = {Value}", GitVersioning.FullSemVer);
+            Log.Information("MajorMinorPatch    = {Value}", GitVersioning.MajorMinorPatch);
 
             Log.Information("BuildId            = {Value}", AzurePipelines?.BuildId);
             Log.Information("BuildNumber        = {Value}", AzurePipelines?.BuildNumber);
@@ -61,6 +66,8 @@ class Build : NukeBuild
                 .EnableLockedMode());
         });
 
+    [GitVersion] readonly GitVersion GitVersioning;
+
     Target Compile => _ => _
         .DependsOn(Restore)
         .Executes(() =>
@@ -68,7 +75,8 @@ class Build : NukeBuild
             DotNetBuild(_ => _
                 .SetProjectFile(Solution)
                 .SetNoRestore(InvokedTargets.Contains(Restore))
-                .SetConfiguration(Configuration));
+                .SetConfiguration(Configuration)
+                .SetVersion(GitVersioning.FullSemVer));
         });
 
     AbsolutePath TestResultDirectory => OutputDirectory / ".test-results";
@@ -88,6 +96,7 @@ class Build : NukeBuild
                         .SetConfiguration(Configuration)
                         .SetNoBuild(InvokedTargets.Contains(Compile))
                         .SetResultsDirectory(TestResultDirectory)
+                        .SetSettingsFile(RootDirectory / "test.runsettings")
                         .CombineWith(testConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
