@@ -2,6 +2,7 @@
 using NSubstitute;
 using Refactor.Application.Data;
 using Refactor.Application.Repositories;
+using Refactor.Application.Repositories.Implementations;
 
 namespace Refactor.Application.Test.Repositories;
 

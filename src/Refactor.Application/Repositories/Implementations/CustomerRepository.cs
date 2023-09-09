@@ -1,6 +1,7 @@
 ﻿using Refactor.Application.Data;
+using Refactor.Application.Repositories.Interfaces;
 
-namespace Refactor.Application.Repositories;
+namespace Refactor.Application.Repositories.Implementations;
 
 public class CustomerRepository : AbstractRepository<Customer>, ICustomerRepository
 {
