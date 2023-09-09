@@ -116,7 +116,7 @@ class Build : NukeBuild
                 TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
                     AzurePipelines?.PublishTestResults(
                         title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
-                        type: AzurePipelinesTestResultsType.NUnit,
+                        type: AzurePipelinesTestResultsType.VSTest,
                         files: new string[] { x }));
             }
         });
