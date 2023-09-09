@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://learn.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file -->
+<RunSettings>
+    <RunConfiguration>
+        <ResultsDirectory>./output/.test-results</ResultsDirectory>
+        <TreatNoTestsAsError>true</TreatNoTestsAsError>
+    </RunConfiguration>
+    <LoggerRunSettings>
+        <Loggers>
+            <Logger friendlyName="console" enabled="True" />
+            <Logger friendlyName="trx" enabled="True" />
+        </Loggers>
+    </LoggerRunSettings>
+</RunSettings>

@@ -96,6 +96,7 @@ class Build : NukeBuild
                         .SetConfiguration(Configuration)
                         .SetNoBuild(InvokedTargets.Contains(Compile))
                         .SetResultsDirectory(TestResultDirectory)
+                        .SetSettingsFile(RootDirectory / "test.runsettings")
                         .CombineWith(testConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
