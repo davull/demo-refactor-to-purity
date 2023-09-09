@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Refactor.Application", "Ref
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Refactor.Application.Test", "Refactor.Application.Test\Refactor.Application.Test.csproj", "{5C45133A-69B5-4E22-A70B-E36177E49B66}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{27F4104D-F72A-43F9-B57D-07F9B22BB77B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27F4104D-F72A-43F9-B57D-07F9B22BB77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F4104D-F72A-43F9-B57D-07F9B22BB77B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6CDA67C-A3A8-4273-A248-1C1C0F9A5195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B6CDA67C-A3A8-4273-A248-1C1C0F9A5195}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6CDA67C-A3A8-4273-A248-1C1C0F9A5195}.Release|Any CPU.ActiveCfg = Release|Any CPU

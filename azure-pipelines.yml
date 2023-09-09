@@ -1,0 +1,29 @@
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops&tabs=yaml
+trigger:
+  - main
+
+variables:
+  - name: BuildContainerImage
+    value: davidullrich/azurepipelineagent:node-20
+
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted
+pool:
+  name: Self-hosted
+
+stages:
+  - stage: build
+    jobs:
+      - job: build
+        container:
+          image: $(BuildContainerImage)
+
+        steps:
+          - task: Cache@2
+            inputs:
+              key: $(Agent.OS) | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS)
+              path: ~/.nuget/packages
+
+          - task: CmdLine@2
+            inputs:
+              script: "./build.cmd Print Restore Compile Test --skip"
