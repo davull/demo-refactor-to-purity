@@ -13,12 +13,8 @@ public class IntegrationTestBase
     }
 
     protected async Task<HttpResponseMessage> GetAsync(string path)
-    {
-        return await Client.GetAsync(path);
-    }
+        => await Client.GetAsync(path);
 
     protected async Task<string> GetStringAsync(string path)
-    {
-        return await Client.GetStringAsync(path);
-    }
+        => await Client.GetStringAsync(path);
 }

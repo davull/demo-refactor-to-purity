@@ -14,7 +14,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<string> Get()
+    public IEnumerable<string> Get(DateTime? startDate, DateTime? endDate)
     {
         yield return "order 1";
     }
