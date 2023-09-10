@@ -7,7 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        
+
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
 
@@ -29,7 +29,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Refactor.Application\Refactor.Application.csproj"/>
     </ItemGroup>
-
 
 
 </Project>

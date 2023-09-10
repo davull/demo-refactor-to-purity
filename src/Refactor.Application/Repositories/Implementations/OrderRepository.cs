@@ -19,4 +19,8 @@ public class OrderRepository : AbstractRepository<Order>, IOrderRepository
     public override Task Update(Order entity) => _database.Update(entity);
 
     public override Task Delete(Order entity) => _database.Delete(entity);
+
+    public async Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate)
+        => (await _database.GetAll<Order>())
+            .Where(x => x.OrderDate >= startDate && x.OrderDate <= endDate);
 }

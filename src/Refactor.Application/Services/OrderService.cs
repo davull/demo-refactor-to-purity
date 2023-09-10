@@ -21,6 +21,23 @@ public class OrderService : IOrderService
     public async Task<Order> GetOrder(Guid id)
     {
         var orderData = await _orderRepository.Get(id);
+        return await GetOrder(orderData);
+    }
+
+    public async Task<IReadOnlyCollection<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate)
+    {
+        var orderData = await _orderRepository.GetOrdersByDate(startDate, endDate);
+
+        var orders = new List<Order>();
+
+        foreach (var order in orderData)
+            orders.Add(await GetOrder(order));
+
+        return orders;
+    }
+
+    private async Task<Order> GetOrder(Data.Order orderData)
+    {
         var customerData = await _customerRepository.Get(orderData.CustomerId);
         var orderItems = await _orderItemService.GetOrderItems(orderData.Id);
 
@@ -38,7 +55,4 @@ public class OrderService : IOrderService
 
         return orderModel;
     }
-
-    public Task<IReadOnlyCollection<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate) =>
-        throw new NotImplementedException();
 }
