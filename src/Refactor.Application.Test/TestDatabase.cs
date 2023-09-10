@@ -18,7 +18,7 @@ public class TestDatabase : InMemoryDatabase
         var order2Id = new Guid("f1cf45fb-33b5-4a3d-b684-2e3a00a0ebea");
 
         // Customers
-        _data.Add(typeof(Customer), new[]
+        _data.Add(typeof(Customer), new List<IData>
         {
             new Customer(customer1Id, "Peter", "Pan", "peter.pan@example.com", true),
             new Customer(new Guid("5358bd39-6c83-42fb-a25c-e3d0ef0d06c8"), "Max", "Mustermann", "none", false),
@@ -26,7 +26,7 @@ public class TestDatabase : InMemoryDatabase
         });
 
         // Orders
-        _data.Add(typeof(Order), new[]
+        _data.Add(typeof(Order), new List<IData>
         {
             new Order(order1Id, customer1Id, new DateTime(2021, 01, 01, 10, 30, 00)),
             new Order(order2Id, customer1Id, new DateTime(2021, 01, 11, 12, 30, 00)),
@@ -35,7 +35,7 @@ public class TestDatabase : InMemoryDatabase
         });
 
         // OrderItems
-        _data.Add(typeof(OrderItem), new[]
+        _data.Add(typeof(OrderItem), new List<IData>
         {
             new OrderItem(new Guid("e008de98-6f3e-4a3e-a81a-e094a923c5c3"), order1Id,
                 new Guid("7db60574-f667-46e9-941e-b775a2542e33"), 1, 10.00m),

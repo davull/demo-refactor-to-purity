@@ -23,6 +23,12 @@ public class OrderItemService : IOrderItemService
         return orderItemModels;
     }
 
+    public async Task AddOrderItem(OrderItem orderItem, Order order)
+    {
+        var orderItemData = MapOrderItem(orderItem, order);
+        await _orderItemRepository.Add(orderItemData);
+    }
+
     private OrderItem MapOrderItem(Data.OrderItem orderItemData)
     {
         var netPrice = orderItemData.Price;
@@ -44,5 +50,16 @@ public class OrderItemService : IOrderItemService
             TotalGrossPrice: totalGrossPrice,
             TotalNetPrice: totalNetPrice);
         return model;
+    }
+
+    private static Data.OrderItem MapOrderItem(OrderItem orderItem, Order order)
+    {
+        var data = new Data.OrderItem(
+            Id: orderItem.Id,
+            OrderId: order.Id,
+            ProductId: orderItem.ProductId,
+            Quantity: orderItem.Quantity,
+            Price: orderItem.NetPrice);
+        return data;
     }
 }

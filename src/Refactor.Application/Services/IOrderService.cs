@@ -7,4 +7,6 @@ public interface IOrderService : IService
     Task<Order> GetOrder(Guid id);
 
     Task<IReadOnlyCollection<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate);
+
+    Task AddOrder(Order order);
 }

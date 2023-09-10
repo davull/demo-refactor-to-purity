@@ -36,6 +36,15 @@ public class OrderService : IOrderService
         return orders;
     }
 
+    public async Task AddOrder(Order order)
+    {
+        var orderData = new Data.Order(
+            Id: order.Id,
+            CustomerId: order.Customer.Id,
+            OrderDate: order.OrderDate);
+        await _orderRepository.Add(orderData);
+    }
+
     private async Task<Order> GetOrder(Data.Order orderData)
     {
         var customerData = await _customerRepository.Get(orderData.CustomerId);

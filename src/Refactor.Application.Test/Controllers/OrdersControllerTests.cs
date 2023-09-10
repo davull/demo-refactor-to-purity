@@ -37,4 +37,17 @@ public class OrdersControllerTests : IntegrationTestBase
         orders.Should().OnlyContain(o => o.OrderDate >= new DateTime(2021, 1, 1) &&
                                          o.OrderDate <= new DateTime(2021, 1, 20));
     }
+
+    [Test]
+    public async Task Should_Add_Order()
+    {
+        var newOrder = new Order(
+            Guid.NewGuid(),
+            new Customer(new Guid("cd8e3d04-e178-4977-b3c7-16eaf3ec9c36"), "Peter", "Pan", "peter.pan@example.com"),
+            new[] { new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 119, 100, 19, 19, 119, 100) },
+            DateTime.Now);
+
+        var response = await PostAsync("/orders", newOrder);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }

@@ -29,4 +29,13 @@ public class OrdersController : ControllerBase
         var result = await _mediator.Send(request, cancellationToken);
         return result;
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Add(Order order, CancellationToken cancellationToken = default)
+    {
+        var request = new AddOrderRequest(order);
+        await _mediator.Send(request, cancellationToken);
+
+        return Ok();
+    }
 }
