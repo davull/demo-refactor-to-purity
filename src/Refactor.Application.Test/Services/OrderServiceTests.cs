@@ -3,6 +3,7 @@ using NSubstitute;
 using Refactor.Application.Data;
 using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
+using static Refactor.Application.Test.DataDummies;
 using OrderItem = Refactor.Application.Models.OrderItem;
 
 namespace Refactor.Application.Test.Services;
@@ -14,9 +15,7 @@ public class OrderServiceTests
     {
         // Arrange
         var orderId = Guid.NewGuid();
-        var customerId = Guid.NewGuid();
-        var orderData = new Order(orderId, customerId, DateTime.UtcNow);
-        var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
+        var orderData = new Order(orderId, PeterPan.Id, DateTime.UtcNow);
 
         var orderItem1 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
         var orderItem2 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
@@ -26,7 +25,7 @@ public class OrderServiceTests
         orderRepository.Get(orderId).Returns(orderData);
 
         var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(customerId).Returns(customerData);
+        customerRepository.Get(PeterPan.Id).Returns(PeterPan);
 
         var orderItemService = Substitute.For<IOrderItemService>();
         orderItemService.GetOrderItems(orderId).Returns(orderItemModels);
@@ -38,8 +37,7 @@ public class OrderServiceTests
 
         // Assert
         order.Should().NotBeNull();
-        order.Customer.FirstName.Should().Be("Peter");
-        order.Customer.LastName.Should().Be("Parker");
+        order.Customer.Should().Be(ModelDummies.PeterPan);
 
         order.Items.Should().HaveCount(2);
         order.Items.Should().Contain(x => x.Id == orderItem1.Id);
@@ -51,11 +49,9 @@ public class OrderServiceTests
     {
         // Arrange
         var orderId = Guid.NewGuid();
-        var customerId = Guid.NewGuid();
-        var orderData1 = new Order(orderId, customerId, DateTime.UtcNow);
-        var orderData2 = new Order(orderId, customerId, DateTime.UtcNow);
+        var orderData1 = new Order(orderId, PeterPan.Id, DateTime.UtcNow);
+        var orderData2 = new Order(orderId, PeterPan.Id, DateTime.UtcNow);
         var orderData = new[] { orderData1, orderData2 };
-        var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
 
         var orderItem1 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
         var orderItem2 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
@@ -65,7 +61,7 @@ public class OrderServiceTests
         orderRepository.GetOrdersByDate(default, default).ReturnsForAnyArgs(orderData);
 
         var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(customerId).Returns(customerData);
+        customerRepository.Get(PeterPan.Id).Returns(PeterPan);
 
         var orderItemService = Substitute.For<IOrderItemService>();
         orderItemService.GetOrderItems(orderId).Returns(orderItemModels);

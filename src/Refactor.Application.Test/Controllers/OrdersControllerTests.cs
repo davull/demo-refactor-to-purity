@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Refactor.Application.Models;
 using Snapshooter.NUnit;
+using static Refactor.Application.Test.ModelDummies;
 
 namespace Refactor.Application.Test.Controllers;
 
@@ -43,7 +44,7 @@ public class OrdersControllerTests : IntegrationTestBase
     {
         var newOrder = new Order(
             Guid.NewGuid(),
-            new Customer(new Guid("cd8e3d04-e178-4977-b3c7-16eaf3ec9c36"), "Peter", "Pan", "peter.pan@example.com"),
+            PeterPan,
             new[] { new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 119, 100, 19, 19, 119, 100) },
             DateTime.Now);
 

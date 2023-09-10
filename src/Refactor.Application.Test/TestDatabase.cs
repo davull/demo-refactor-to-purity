@@ -1,5 +1,6 @@
 ﻿using Refactor.Application.Data;
 using Refactor.Application.Repositories;
+using static Refactor.Application.Test.DataDummies;
 
 namespace Refactor.Application.Test;
 
@@ -12,25 +13,18 @@ public class TestDatabase : InMemoryDatabase
 
     private void Seed()
     {
-        var customer1Id = new Guid("cd8e3d04-e178-4977-b3c7-16eaf3ec9c36");
-        var customer2Id = new Guid("0ad8b933-51d4-42e7-8f8a-77c2743e4e1d");
         var order1Id = new Guid("687b4a03-6f3d-4f42-9ee6-53d5cf7e80d5");
         var order2Id = new Guid("f1cf45fb-33b5-4a3d-b684-2e3a00a0ebea");
 
         // Customers
-        _data.Add(typeof(Customer), new List<IData>
-        {
-            new Customer(customer1Id, "Peter", "Pan", "peter.pan@example.com", true),
-            new Customer(new Guid("5358bd39-6c83-42fb-a25c-e3d0ef0d06c8"), "Max", "Mustermann", "none", false),
-            new Customer(customer2Id, "Niko", "Laus", "n.laus@example.com", true)
-        });
+        _data.Add(typeof(Customer), new List<IData> { PeterPan, JohnDoe, JaneDoe });
 
         // Orders
         _data.Add(typeof(Order), new List<IData>
         {
-            new Order(order1Id, customer1Id, new DateTime(2021, 01, 01, 10, 30, 00)),
-            new Order(order2Id, customer1Id, new DateTime(2021, 01, 11, 12, 30, 00)),
-            new Order(new Guid("6a72a608-77ea-4742-80b1-2152daf260c9"), customer2Id,
+            new Order(order1Id, PeterPan.Id, new DateTime(2021, 01, 01, 10, 30, 00)),
+            new Order(order2Id, PeterPan.Id, new DateTime(2021, 01, 11, 12, 30, 00)),
+            new Order(new Guid("6a72a608-77ea-4742-80b1-2152daf260c9"), JohnDoe.Id,
                 new DateTime(2021, 01, 20, 20, 45, 00))
         });
 
