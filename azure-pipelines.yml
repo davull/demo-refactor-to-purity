@@ -33,10 +33,12 @@ stages:
               packageType: sdk
               version: 7.x
 
+          # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/cache-v2
+          # https://learn.microsoft.com/en-us/azure/devops/pipelines/artifacts/caching-nuget
           - task: Cache@2
             displayName: "Cache NuGet packages"
             inputs:
-              key: 'nuget | "$(Agent.OS)" | $(Build.SourcesDirectory)/**/packages.lock.json'
+              key: 'nuget | "$(Agent.OS)" | $(Build.SourcesDirectory)/**/packages.lock.json,!**/bin/**,!**/obj/**,!**/output/**'
               restoreKeys: |
                 nuget | "$(Agent.OS)"
                 nuget
