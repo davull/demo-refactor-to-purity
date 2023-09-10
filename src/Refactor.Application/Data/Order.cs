@@ -3,5 +3,4 @@
 public record Order(
     Guid Id,
     Guid CustomerId,
-    DateTime OrderDate,
-    decimal Total) : IData;
+    DateTime OrderDate) : IData;

@@ -20,7 +20,8 @@ public class Program
 
         var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() ||
+            app.Environment.IsEnvironment("Test"))
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -35,7 +36,7 @@ public class Program
     private static IServiceCollection RegisterServices(IServiceCollection services)
     {
         // Register database
-        services.AddSingleton<IDatabase, InMemoryDatabase>();
+        services.AddScoped<IDatabase, InMemoryDatabase>();
 
         // Register Repositories
         services.AddTransient<ICustomerRepository, CustomerRepository>();

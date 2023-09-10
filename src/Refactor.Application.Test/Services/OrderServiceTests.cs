@@ -15,7 +15,7 @@ public class OrderServiceTests
         // Arrange
         var orderId = Guid.NewGuid();
         var customerId = Guid.NewGuid();
-        var orderData = new Order(orderId, customerId, DateTime.UtcNow, 100);
+        var orderData = new Order(orderId, customerId, DateTime.UtcNow);
         var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
 
         var orderItem1 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
@@ -52,8 +52,8 @@ public class OrderServiceTests
         // Arrange
         var orderId = Guid.NewGuid();
         var customerId = Guid.NewGuid();
-        var orderData1 = new Order(orderId, customerId, DateTime.UtcNow, 100);
-        var orderData2 = new Order(orderId, customerId, DateTime.UtcNow, 100);
+        var orderData1 = new Order(orderId, customerId, DateTime.UtcNow);
+        var orderData2 = new Order(orderId, customerId, DateTime.UtcNow);
         var orderData = new[] { orderData1, orderData2 };
         var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
 
