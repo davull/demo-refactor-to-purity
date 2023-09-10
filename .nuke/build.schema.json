@@ -75,8 +75,11 @@
               "Clean",
               "Compile",
               "Print",
+              "Publish",
+              "PublishArtifacts",
               "Restore",
-              "Test"
+              "Test",
+              "Zip"
             ]
           }
         },
@@ -93,8 +96,11 @@
               "Clean",
               "Compile",
               "Print",
+              "Publish",
+              "PublishArtifacts",
               "Restore",
-              "Test"
+              "Test",
+              "Zip"
             ]
           }
         },

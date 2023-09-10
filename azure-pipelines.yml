@@ -43,4 +43,4 @@ stages:
           - task: CmdLine@2
             displayName: "Run Nuke"
             inputs:
-              script: "./build.cmd Print Restore Compile Test --skip"
+              script: "./build.cmd Print Restore Compile Test Publish Zip PublishArtifacts --skip"
