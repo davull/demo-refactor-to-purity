@@ -74,9 +74,13 @@
             "enum": [
               "Clean",
               "Compile",
+              "CoverageReport",
               "Print",
+              "Publish",
+              "PublishArtifacts",
               "Restore",
-              "Test"
+              "Test",
+              "Zip"
             ]
           }
         },
@@ -92,9 +96,13 @@
             "enum": [
               "Clean",
               "Compile",
+              "CoverageReport",
               "Print",
+              "Publish",
+              "PublishArtifacts",
               "Restore",
-              "Test"
+              "Test",
+              "Zip"
             ]
           }
         },

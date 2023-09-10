@@ -1,1 +1,103 @@
-﻿["order 1"]
+﻿[
+  {
+    "id": "687b4a03-6f3d-4f42-9ee6-53d5cf7e80d5",
+    "customer": {
+      "id": "cd8e3d04-e178-4977-b3c7-16eaf3ec9c36",
+      "firstName": "Peter",
+      "lastName": "Pan",
+      "email": "peter.pan@example.com"
+    },
+    "items": [
+      {
+        "id": "e008de98-6f3e-4a3e-a81a-e094a923c5c3",
+        "productId": "7db60574-f667-46e9-941e-b775a2542e33",
+        "quantity": 1,
+        "grossPrice": 11.9,
+        "netPrice": 10.0,
+        "taxRate": 19,
+        "taxAmount": 1.9,
+        "totalGrossPrice": 11.9,
+        "totalNetPrice": 10.0
+      },
+      {
+        "id": "84dfe6a1-c537-4468-bb6d-4a93cba99ae8",
+        "productId": "cd6b6e1c-8cf2-4769-8205-39f41179c135",
+        "quantity": 2,
+        "grossPrice": 54.145,
+        "netPrice": 45.5,
+        "taxRate": 19,
+        "taxAmount": 8.645,
+        "totalGrossPrice": 108.29,
+        "totalNetPrice": 91.0
+      }
+    ],
+    "orderDate": "2021-01-01T10:30:00"
+  },
+  {
+    "id": "f1cf45fb-33b5-4a3d-b684-2e3a00a0ebea",
+    "customer": {
+      "id": "cd8e3d04-e178-4977-b3c7-16eaf3ec9c36",
+      "firstName": "Peter",
+      "lastName": "Pan",
+      "email": "peter.pan@example.com"
+    },
+    "items": [
+      {
+        "id": "0f90b82b-0c29-4417-8f18-da20b734d3a7",
+        "productId": "ff08a855-9f82-4f2d-bf98-f0a929f4ef90",
+        "quantity": 1,
+        "grossPrice": 11.662,
+        "netPrice": 9.8,
+        "taxRate": 19,
+        "taxAmount": 1.862,
+        "totalGrossPrice": 11.662,
+        "totalNetPrice": 9.8
+      },
+      {
+        "id": "84319c54-7eab-416f-8172-bd472635dc88",
+        "productId": "2cfcd5d9-dcb6-495d-9878-8d8f6fe85fac",
+        "quantity": 1,
+        "grossPrice": 12.495,
+        "netPrice": 10.5,
+        "taxRate": 19,
+        "taxAmount": 1.995,
+        "totalGrossPrice": 12.495,
+        "totalNetPrice": 10.5
+      },
+      {
+        "id": "78263e1a-1023-494f-a89e-dbe24d8819de",
+        "productId": "89671827-5b8c-40cd-a533-af04224f5f29",
+        "quantity": 4,
+        "grossPrice": 23.8,
+        "netPrice": 20.0,
+        "taxRate": 19,
+        "taxAmount": 3.8,
+        "totalGrossPrice": 95.2,
+        "totalNetPrice": 80.0
+      },
+      {
+        "id": "3400dfa0-49ee-441c-8b93-a9040f6c83cd",
+        "productId": "d583263d-2169-4dc7-acbe-52846b79b7a9",
+        "quantity": 2,
+        "grossPrice": 36.295,
+        "netPrice": 30.5,
+        "taxRate": 19,
+        "taxAmount": 5.795,
+        "totalGrossPrice": 72.59,
+        "totalNetPrice": 61.0
+      }
+    ],
+    "orderDate": "2021-01-11T12:30:00"
+  },
+  {
+    "id": "6a72a608-77ea-4742-80b1-2152daf260c9",
+    "customer": {
+      "id": "0ad8b933-51d4-42e7-8f8a-77c2743e4e1d",
+      "firstName": "Niko",
+      "lastName": "Laus",
+      "email": "n.laus@example.com"
+    },
+    "items": [],
+    "orderDate": "2021-01-20T20:45:00"
+  }
+]

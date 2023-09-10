@@ -1,3 +1,8 @@
+using Refactor.Application.Repositories;
+using Refactor.Application.Repositories.Implementations;
+using Refactor.Application.Repositories.Interfaces;
+using Refactor.Application.Services;
+
 namespace Refactor.Application;
 
 public class Program
@@ -10,9 +15,13 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        RegisterServices(builder.Services)
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
         var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() ||
+            app.Environment.IsEnvironment("Test"))
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -22,5 +31,23 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
         app.Run();
+    }
+
+    private static IServiceCollection RegisterServices(IServiceCollection services)
+    {
+        // Register database
+        services.AddScoped<IDatabase, InMemoryDatabase>();
+
+        // Register Repositories
+        services.AddTransient<ICustomerRepository, CustomerRepository>();
+        services.AddTransient<IOrderRepository, OrderRepository>();
+        services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+
+        // Register Services
+        services.AddSingleton<ITaxService, TaxService>();
+        services.AddTransient<IOrderService, OrderService>();
+        services.AddTransient<IOrderItemService, OrderItemService>();
+
+        return services;
     }
 }

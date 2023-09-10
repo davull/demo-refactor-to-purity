@@ -4,7 +4,7 @@ namespace Refactor.Application.Repositories;
 
 public class InMemoryDatabase : IDatabase
 {
-    private readonly IDictionary<Type, ICollection<IData>> _data = new Dictionary<Type, ICollection<IData>>();
+    protected readonly IDictionary<Type, ICollection<IData>> _data = new Dictionary<Type, ICollection<IData>>();
 
     public async Task<T> Get<T>(Guid id) where T : IData =>
         (await GetAll<T>()).Single(d => d.Id == id);

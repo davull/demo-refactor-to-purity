@@ -1,4 +1,6 @@
-﻿namespace Refactor.Application.Test;
+﻿using System.Net.Http.Json;
+
+namespace Refactor.Application.Test;
 
 public class IntegrationTestBase
 {
@@ -17,4 +19,10 @@ public class IntegrationTestBase
 
     protected async Task<string> GetStringAsync(string path)
         => await Client.GetStringAsync(path);
+
+    protected async Task<T?> GetAsync<T>(string path)
+        => await Client.GetFromJsonAsync<T>(path);
+
+    protected async Task<HttpResponseMessage> PostAsync<T>(string path, T payload)
+        => await Client.PostAsJsonAsync(path, payload);
 }
