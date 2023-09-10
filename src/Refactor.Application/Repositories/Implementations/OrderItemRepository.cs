@@ -18,4 +18,11 @@ public class OrderItemRepository : AbstractRepository<OrderItem>, IOrderItemRepo
     public override Task Update(OrderItem entity) => _database.Update(entity);
 
     public override Task Delete(OrderItem entity) => _database.Delete(entity);
+
+    public async Task<IReadOnlyCollection<OrderItem>> GetByOrderId(Guid orderId)
+    {
+        return (await _database.GetAll<OrderItem>())
+            .Where(i => i.OrderId == orderId)
+            .ToList();
+    }
 }

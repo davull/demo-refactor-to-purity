@@ -1,5 +1,10 @@
-﻿namespace Refactor.Application.Services;
+﻿using Refactor.Application.Models;
 
-public interface IOrderService
+namespace Refactor.Application.Services;
+
+public interface IOrderService : IService
 {
+    Task<Order> GetOrder(Guid id);
+
+    Task<IReadOnlyCollection<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate);
 }
