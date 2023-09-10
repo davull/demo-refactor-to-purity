@@ -7,11 +7,15 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
+
 
 class Build : NukeBuild
 {
@@ -106,8 +110,9 @@ class Build : NukeBuild
                 DotNetTest(_ => _
                         .SetConfiguration(Configuration)
                         .SetNoBuild(InvokedTargets.Contains(Compile))
-                        .SetResultsDirectory(TestResultDirectory)
                         .SetSettingsFile(RootDirectory / "test.runsettings")
+                        .EnableCollectCoverage()
+                        .SetDataCollector("XPlat Code Coverage")
                         .CombineWith(testConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
@@ -125,6 +130,27 @@ class Build : NukeBuild
                             AzurePipelinesTestResultsType.VSTest,
                             new string[] { x }));
             }
+        });
+
+    AbsolutePath CoverageReportDirectory => OutputDirectory / ".coverage";
+
+    Target CoverageReport => _ => _
+        .DependsOn(Test)
+        .AssuredAfterFailure()
+        .Executes(() =>
+        {
+            var reportFiles = TestResultDirectory.GlobFiles("*/coverage.cobertura.xml")
+                .Select(p => (string)p);
+
+            ReportGenerator(_ => _
+                .SetTargetDirectory(CoverageReportDirectory)
+                .AddReports(reportFiles)
+                .SetReportTypes(ReportTypes.Cobertura, ReportTypes.HtmlInline_AzurePipelines));
+
+            AzurePipelines?.PublishCodeCoverage(
+                AzurePipelinesCodeCoverageToolType.Cobertura,
+                summaryFile: CoverageReportDirectory / "Cobertura.xml",
+                reportDirectory: CoverageReportDirectory);
         });
 
     AbsolutePath PublishOutputDirectory => OutputDirectory / "publish";

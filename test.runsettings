@@ -5,6 +5,17 @@
         <ResultsDirectory>./output/.test-results</ResultsDirectory>
         <TreatNoTestsAsError>true</TreatNoTestsAsError>
     </RunConfiguration>
+    <DataCollectionRunSettings>
+        <DataCollectors>
+            <!-- https://github.com/coverlet-coverage/coverlet/blob/master/Documentation/VSTestIntegration.md -->
+            <DataCollector friendlyName="XPlat code coverage">
+                <Configuration>
+                    <Format>cobertura</Format>
+                    <IncludeTestAssembly>false</IncludeTestAssembly>
+                </Configuration>
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
     <LoggerRunSettings>
         <Loggers>
             <Logger friendlyName="console" enabled="True" />

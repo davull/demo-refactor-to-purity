@@ -9,6 +9,8 @@ variables:
     value: $(Pipeline.Workspace)/.nuget/packages
   - name: DOTNET_NOLOGO
     value: 1
+  - name: DISABLE_COVERAGE_AUTOGENERATE
+    value: 1
 
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted
 pool:
@@ -16,8 +18,10 @@ pool:
 
 stages:
   - stage: build
+    displayName: Build & Test
     jobs:
-      - job: build
+      - job: nuke
+        displayName: Run Nuke
         container:
           image: $(BuildContainerImage)
 
@@ -47,4 +51,4 @@ stages:
           - task: CmdLine@2
             displayName: "Run Nuke"
             inputs:
-              script: "./build.cmd Print Restore Compile Test Publish Zip PublishArtifacts --skip"
+              script: "./build.cmd Print Restore Compile Test CoverageReport Publish Zip PublishArtifacts --skip"
