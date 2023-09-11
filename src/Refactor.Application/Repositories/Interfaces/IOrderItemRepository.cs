@@ -2,7 +2,7 @@
 
 namespace Refactor.Application.Repositories.Interfaces;
 
-public interface IOrderItemRepository : IRepository<OrderItem>
+public interface IOrderItemRepository : IRepository<OrderItemData>
 {
-    Task<IReadOnlyCollection<OrderItem>> GetByOrderId(Guid orderId);
+    Task<IReadOnlyCollection<OrderItemData>> GetByOrderId(Guid orderId);
 }

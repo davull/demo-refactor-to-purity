@@ -1,6 +1,6 @@
 ﻿namespace Refactor.Application.Data;
 
-public record OrderItem(
+public record OrderItemData(
     Guid Id,
     Guid OrderId,
     Guid ProductId,

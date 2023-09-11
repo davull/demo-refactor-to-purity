@@ -15,7 +15,7 @@ public class InMemoryDatabaseTests
         await sut.Add(JohnDoe);
         await sut.Add(JaneDoe);
 
-        var actual = (await sut.GetAll<Customer>()).ToList();
+        var actual = (await sut.GetAll<CustomerData>()).ToList();
 
         actual.Should().HaveCount(2);
         actual.Should().Contain(JohnDoe);
@@ -30,12 +30,12 @@ public class InMemoryDatabaseTests
         await sut.Add(JohnDoe);
         await sut.Add(JaneDoe);
 
-        var actual = (await sut.GetAll<Customer>()).ToList();
+        var actual = (await sut.GetAll<CustomerData>()).ToList();
         actual.Should().HaveCount(2);
 
         await sut.Delete(JohnDoe);
 
-        actual = (await sut.GetAll<Customer>()).ToList();
+        actual = (await sut.GetAll<CustomerData>()).ToList();
         actual.Should().HaveCount(1);
 
         actual.Should().NotContain(JohnDoe);

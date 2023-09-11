@@ -1,4 +1,5 @@
-﻿using Refactor.Application.Models;
+﻿using Refactor.Application.Data;
+using Refactor.Application.Models;
 
 namespace Refactor.Application.Test;
 
@@ -15,7 +16,7 @@ internal static class ModelDummies
     public static Customer Customer(Guid? id = null, string firstName = "Peter", string lastName = "Parker",
         string email = "peter.parker@example.com") => new(id ?? Guid.NewGuid(), firstName, lastName, email);
 
-    public static Customer FromData(Data.Customer data)
+    public static Customer FromData(CustomerData data)
     {
         return Customer(
             id: data.Id,

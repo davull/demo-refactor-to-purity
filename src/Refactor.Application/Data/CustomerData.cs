@@ -1,6 +1,6 @@
 ﻿namespace Refactor.Application.Data;
 
-public record Customer(
+public record CustomerData(
     Guid Id,
     string FirstName,
     string LastName,

@@ -2,7 +2,7 @@
 
 namespace Refactor.Application.Repositories.Interfaces;
 
-public interface IOrderRepository : IRepository<Order>
+public interface IOrderRepository : IRepository<OrderData>
 {
-    Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<OrderData>> GetOrdersByDate(DateTime startDate, DateTime endDate);
 }

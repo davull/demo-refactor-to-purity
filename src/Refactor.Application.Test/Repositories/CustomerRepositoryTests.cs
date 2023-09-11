@@ -16,7 +16,7 @@ public class CustomerRepositoryTests
         var allCustomers = Many(JohnDoe, JaneDoe);
         var database = Substitute.For<IDatabase>();
 
-        database.GetAll<Customer>()
+        database.GetAll<CustomerData>()
             .Returns(allCustomers);
 
         var sut = new CustomerRepository(database);
