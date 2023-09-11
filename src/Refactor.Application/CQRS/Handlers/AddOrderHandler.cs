@@ -9,15 +9,15 @@ public class AddOrderHandler : IRequestHandler<AddOrderRequest>
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IOrderItemRepository _orderItemRepository;
-    private readonly IOrderService _orderService;
+    private readonly IOrderRepository _orderRepository;
 
-    public AddOrderHandler(IOrderService orderService,
-        ICustomerRepository customerRepository,
-        IOrderItemRepository orderItemRepository)
+    public AddOrderHandler(ICustomerRepository customerRepository,
+        IOrderItemRepository orderItemRepository,
+        IOrderRepository orderRepository)
     {
-        _orderService = orderService;
         _customerRepository = customerRepository;
         _orderItemRepository = orderItemRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task Handle(AddOrderRequest request, CancellationToken cancellationToken)
@@ -36,6 +36,6 @@ public class AddOrderHandler : IRequestHandler<AddOrderRequest>
             await _orderItemRepository.Add(orderItemData);
         }
 
-        await _orderService.AddOrder(request.Order);
+        await OrderService.AddOrder(request.Order, _orderRepository.Add);
     }
 }

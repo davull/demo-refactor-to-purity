@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using NSubstitute;
-using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
 
 namespace Refactor.Application.Test.Services;
@@ -13,25 +11,16 @@ public class OrderServiceTests
         // Arrange
         var peterPan = DataDummies.PeterPan;
         var orderId = Guid.NewGuid();
-        var orderData = DataDummies.Order(orderId, peterPan.Id);
 
         var orderItem1 = DataDummies.OrderItem();
         var orderItem2 = DataDummies.OrderItem();
-        var orderItemData = DataDummies.Collection(orderItem1, orderItem2);
 
-        var orderRepository = Substitute.For<IOrderRepository>();
-        orderRepository.Get(orderId).Returns(orderData);
-
-        var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(peterPan.Id).Returns(peterPan);
-
-        var orderItemRepository = Substitute.For<IOrderItemRepository>();
-        orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);
-
-        var sut = new OrderService(orderRepository, customerRepository, orderItemRepository);
+        var getOrder = (Guid _) => Task.FromResult(DataDummies.Order(orderId, peterPan.Id));
+        var getCustomer = (Guid _) => Task.FromResult(peterPan);
+        var getByOrderId = (Guid _) => Task.FromResult(DataDummies.Collection(orderItem1, orderItem2));
 
         // Act
-        var order = await sut.GetOrder(orderId);
+        var order = await OrderService.GetOrder(orderId, getOrder, getCustomer, getByOrderId);
 
         // Assert
         order.Should().NotBeNull();
@@ -48,30 +37,23 @@ public class OrderServiceTests
         // Arrange
         var peterPan = DataDummies.PeterPan;
         var orderId = Guid.NewGuid();
-        var orderData1 = DataDummies.Order(orderId, peterPan.Id);
-        var orderData2 = DataDummies.Order(orderId, peterPan.Id);
-        var orderData = DataDummies.Many(orderData1, orderData2);
 
-        var orderItem1 = DataDummies.OrderItem();
-        var orderItem2 = DataDummies.OrderItem();
-        var orderItemData = DataDummies.Collection(orderItem1, orderItem2);
+        var orderData = DataDummies.Enum(
+            DataDummies.Order(orderId, peterPan.Id),
+            DataDummies.Order(orderId, peterPan.Id));
 
-        var orderRepository = Substitute.For<IOrderRepository>();
-        orderRepository.GetOrdersByDate(default, default).ReturnsForAnyArgs(orderData);
+        var orderItemData = DataDummies.Collection(DataDummies.OrderItem(), DataDummies.OrderItem());
 
-        var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(peterPan.Id).Returns(peterPan);
-
-        var orderItemRepository = Substitute.For<IOrderItemRepository>();
-        orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);
+        var getOrdersByDate = (DateTime _, DateTime _) => Task.FromResult(orderData);
+        var getCustomer = (Guid _) => Task.FromResult(peterPan);
+        var getByOrderId = (Guid _) => Task.FromResult(orderItemData);
 
         var startDate = DateTime.UtcNow.AddDays(-1);
         var endDate = DateTime.UtcNow;
 
-        var sut = new OrderService(orderRepository, customerRepository, orderItemRepository);
-
         // Act
-        var orders = await sut.GetOrdersByDate(startDate, endDate);
+        var orders = await OrderService.GetOrdersByDate(startDate, endDate,
+            getOrdersByDate, getCustomer, getByOrderId);
 
         // Assert
         orders.Should().NotBeNullOrEmpty();

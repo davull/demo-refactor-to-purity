@@ -1,58 +1,57 @@
 ﻿using Refactor.Application.Models;
-using Refactor.Application.Repositories.Interfaces;
+using Customer = Refactor.Application.Data.Customer;
+using OrderItem = Refactor.Application.Data.OrderItem;
 
 namespace Refactor.Application.Services;
 
-public class OrderService : IOrderService
+public static class OrderService
 {
-    private readonly ICustomerRepository _customerRepository;
-    private readonly IOrderItemRepository _orderItemRepository;
-    private readonly IOrderRepository _orderRepository;
-
-    public OrderService(IOrderRepository orderRepository,
-        ICustomerRepository customerRepository,
-        IOrderItemRepository orderItemRepository)
+    public static async Task<Order> GetOrder(Guid id,
+        Func<Guid, Task<Data.Order>> getOrder,
+        Func<Guid, Task<Customer>> getCustomer,
+        Func<Guid, Task<IReadOnlyCollection<OrderItem>>> getOrderItems)
     {
-        _orderRepository = orderRepository;
-        _customerRepository = customerRepository;
-        _orderItemRepository = orderItemRepository;
+        var orderData = await getOrder(id);
+        var customerData = await getCustomer(orderData.CustomerId);
+        var orderItemData = await getOrderItems(id);
+        return GetOrder(orderData, customerData, orderItemData);
     }
 
-    public async Task<Order> GetOrder(Guid id)
+    public static async Task<IReadOnlyCollection<Order>> GetOrdersByDate(
+        DateTime startDate, DateTime endDate,
+        Func<DateTime, DateTime, Task<IEnumerable<Data.Order>>> getOrdersByDate,
+        Func<Guid, Task<Customer>> getCustomer,
+        Func<Guid, Task<IReadOnlyCollection<OrderItem>>> getOrderItems)
     {
-        var orderData = await _orderRepository.Get(id);
-        return await GetOrder(orderData);
-    }
-
-    public async Task<IReadOnlyCollection<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate)
-    {
-        var orderData = await _orderRepository.GetOrdersByDate(startDate, endDate);
+        var orderData = await getOrdersByDate(startDate, endDate);
 
         var orders = new List<Order>();
 
         foreach (var order in orderData)
-            orders.Add(await GetOrder(order));
+        {
+            var customerData = await getCustomer(order.CustomerId);
+            var orderItemData = await getOrderItems(order.Id);
+            orders.Add(GetOrder(order, customerData, orderItemData));
+        }
 
         return orders;
     }
 
-    public async Task AddOrder(Order order)
+    public static async Task AddOrder(Order order, Func<Data.Order, Task> add)
     {
         var orderData = new Data.Order(
             Id: order.Id,
             CustomerId: order.Customer.Id,
             OrderDate: order.OrderDate);
-        await _orderRepository.Add(orderData);
+        await add(orderData);
     }
 
-    private async Task<Order> GetOrder(Data.Order orderData)
+    private static Order GetOrder(Data.Order orderData, Customer customerData,
+        IEnumerable<OrderItem> orderItemData)
     {
-        var customerData = await _customerRepository.Get(orderData.CustomerId);
-        var orderItemData = await _orderItemRepository.GetByOrderId(orderData.Id);
-
         var orderItems = OrderItemService.GetOrderItems(orderItemData);
 
-        var customerModel = new Customer(
+        var customerModel = new Models.Customer(
             customerData.Id,
             customerData.FirstName,
             customerData.LastName,

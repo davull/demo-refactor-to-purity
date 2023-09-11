@@ -1,7 +1,6 @@
 using Refactor.Application.Repositories;
 using Refactor.Application.Repositories.Implementations;
 using Refactor.Application.Repositories.Interfaces;
-using Refactor.Application.Services;
 
 namespace Refactor.Application;
 
@@ -42,9 +41,6 @@ public class Program
         services.AddTransient<ICustomerRepository, CustomerRepository>();
         services.AddTransient<IOrderRepository, OrderRepository>();
         services.AddTransient<IOrderItemRepository, OrderItemRepository>();
-
-        // Register Services
-        services.AddTransient<IOrderService, OrderService>();
 
         return services;
     }

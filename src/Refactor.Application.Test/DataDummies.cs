@@ -41,5 +41,7 @@ internal static class DataDummies
 
     public static T[] Many<T>(params T[] items) => items.ToArray();
 
+    public static IEnumerable<T> Enum<T>(params T[] items) => items;
+
     public static IReadOnlyCollection<T> Collection<T>(params T[] items) => items.ToList();
 }
