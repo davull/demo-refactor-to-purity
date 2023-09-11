@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Refactor.Application.Data;
 using Refactor.Application.Repositories;
+using static Refactor.Application.Test.DataDummies;
 
 namespace Refactor.Application.Test.Repositories;
 
@@ -11,17 +12,14 @@ public class InMemoryDatabaseTests
     {
         var sut = new InMemoryDatabase();
 
-        var customer1 = new Customer(Guid.NewGuid(), "John", "Doe", "john.doe@example.com", true);
-        var customer2 = new Customer(Guid.NewGuid(), "Jane", "Doe", "jane.doe@example.com", false);
-
-        await sut.Add(customer1);
-        await sut.Add(customer2);
+        await sut.Add(JohnDoe);
+        await sut.Add(JaneDoe);
 
         var actual = (await sut.GetAll<Customer>()).ToList();
 
         actual.Should().HaveCount(2);
-        actual.Should().Contain(customer1);
-        actual.Should().Contain(customer2);
+        actual.Should().Contain(JohnDoe);
+        actual.Should().Contain(JaneDoe);
     }
 
     [Test]
@@ -29,20 +27,17 @@ public class InMemoryDatabaseTests
     {
         var sut = new InMemoryDatabase();
 
-        var customer1 = new Customer(Guid.NewGuid(), "John", "Doe", "john.doe@example.com", true);
-        var customer2 = new Customer(Guid.NewGuid(), "Jane", "Doe", "jane.doe@example.com", false);
-
-        await sut.Add(customer1);
-        await sut.Add(customer2);
+        await sut.Add(JohnDoe);
+        await sut.Add(JaneDoe);
 
         var actual = (await sut.GetAll<Customer>()).ToList();
         actual.Should().HaveCount(2);
 
-        await sut.Delete(customer1);
+        await sut.Delete(JohnDoe);
 
         actual = (await sut.GetAll<Customer>()).ToList();
         actual.Should().HaveCount(1);
 
-        actual.Should().NotContain(customer1);
+        actual.Should().NotContain(JohnDoe);
     }
 }

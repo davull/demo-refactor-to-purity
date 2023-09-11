@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
 using NSubstitute;
-using Refactor.Application.Data;
 using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
-using OrderItem = Refactor.Application.Models.OrderItem;
 
 namespace Refactor.Application.Test.Services;
 
@@ -13,20 +11,19 @@ public class OrderServiceTests
     public async Task Should_Return_Order()
     {
         // Arrange
+        var peterPan = DataDummies.PeterPan;
         var orderId = Guid.NewGuid();
-        var customerId = Guid.NewGuid();
-        var orderData = new Order(orderId, customerId, DateTime.UtcNow);
-        var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
+        var orderData = DataDummies.Order(orderId, peterPan.Id);
 
-        var orderItem1 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
-        var orderItem2 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
-        var orderItemModels = new[] { orderItem1, orderItem2 };
+        var orderItem1 = ModelDummies.OrderItem();
+        var orderItem2 = ModelDummies.OrderItem();
+        var orderItemModels = ModelDummies.Collection(orderItem1, orderItem2);
 
         var orderRepository = Substitute.For<IOrderRepository>();
         orderRepository.Get(orderId).Returns(orderData);
 
         var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(customerId).Returns(customerData);
+        customerRepository.Get(peterPan.Id).Returns(peterPan);
 
         var orderItemService = Substitute.For<IOrderItemService>();
         orderItemService.GetOrderItems(orderId).Returns(orderItemModels);
@@ -38,8 +35,7 @@ public class OrderServiceTests
 
         // Assert
         order.Should().NotBeNull();
-        order.Customer.FirstName.Should().Be("Peter");
-        order.Customer.LastName.Should().Be("Parker");
+        order.Customer.Should().Be(ModelDummies.PeterPan);
 
         order.Items.Should().HaveCount(2);
         order.Items.Should().Contain(x => x.Id == orderItem1.Id);
@@ -50,22 +46,21 @@ public class OrderServiceTests
     public async Task Should_Return_OrdersByDate()
     {
         // Arrange
+        var peterPan = DataDummies.PeterPan;
         var orderId = Guid.NewGuid();
-        var customerId = Guid.NewGuid();
-        var orderData1 = new Order(orderId, customerId, DateTime.UtcNow);
-        var orderData2 = new Order(orderId, customerId, DateTime.UtcNow);
-        var orderData = new[] { orderData1, orderData2 };
-        var customerData = new Customer(customerId, "Peter", "Parker", "peter.parker@example.com", true);
+        var orderData1 = DataDummies.Order(orderId, peterPan.Id);
+        var orderData2 = DataDummies.Order(orderId, peterPan.Id);
+        var orderData = DataDummies.Many(orderData1, orderData2);
 
-        var orderItem1 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
-        var orderItem2 = new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 0, 0, 0, 0, 0, 0);
-        var orderItemModels = new[] { orderItem1, orderItem2 };
+        var orderItem1 = ModelDummies.OrderItem();
+        var orderItem2 = ModelDummies.OrderItem();
+        var orderItemModels = DataDummies.Collection(orderItem1, orderItem2);
 
         var orderRepository = Substitute.For<IOrderRepository>();
         orderRepository.GetOrdersByDate(default, default).ReturnsForAnyArgs(orderData);
 
         var customerRepository = Substitute.For<ICustomerRepository>();
-        customerRepository.Get(customerId).Returns(customerData);
+        customerRepository.Get(peterPan.Id).Returns(peterPan);
 
         var orderItemService = Substitute.For<IOrderItemService>();
         orderItemService.GetOrderItems(orderId).Returns(orderItemModels);

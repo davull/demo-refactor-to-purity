@@ -3,6 +3,7 @@ using NSubstitute;
 using Refactor.Application.Data;
 using Refactor.Application.Repositories;
 using Refactor.Application.Repositories.Implementations;
+using static Refactor.Application.Test.DataDummies;
 
 namespace Refactor.Application.Test.Repositories;
 
@@ -12,9 +13,7 @@ public class CustomerRepositoryTests
     public async Task Should_Only_Return_Active_Customers()
     {
         // Arrange
-        var customer1 = new Customer(Guid.NewGuid(), "John", "Doe", "john.doe@example.com", true);
-        var customer2 = new Customer(Guid.NewGuid(), "Jane", "Doe", "jane.doe@example.com", false);
-        var allCustomers = new[] { customer1, customer2 };
+        var allCustomers = Many(JohnDoe, JaneDoe);
         var database = Substitute.For<IDatabase>();
 
         database.GetAll<Customer>()
@@ -27,7 +26,7 @@ public class CustomerRepositoryTests
 
         // Assert
         actual.Should().OnlyContain(c => c.Active);
-        actual.Should().Contain(customer1);
-        actual.Should().NotContain(customer2);
+        actual.Should().Contain(JohnDoe);
+        actual.Should().NotContain(JaneDoe);
     }
 }
