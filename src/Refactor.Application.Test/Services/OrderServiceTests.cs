@@ -15,9 +15,9 @@ public class OrderServiceTests
         var orderId = Guid.NewGuid();
         var orderData = DataDummies.Order(orderId, peterPan.Id);
 
-        var orderItem1 = ModelDummies.OrderItem();
-        var orderItem2 = ModelDummies.OrderItem();
-        var orderItemModels = ModelDummies.Collection(orderItem1, orderItem2);
+        var orderItem1 = DataDummies.OrderItem();
+        var orderItem2 = DataDummies.OrderItem();
+        var orderItemData = DataDummies.Collection(orderItem1, orderItem2);
 
         var orderRepository = Substitute.For<IOrderRepository>();
         orderRepository.Get(orderId).Returns(orderData);
@@ -25,10 +25,10 @@ public class OrderServiceTests
         var customerRepository = Substitute.For<ICustomerRepository>();
         customerRepository.Get(peterPan.Id).Returns(peterPan);
 
-        var orderItemService = Substitute.For<IOrderItemService>();
-        orderItemService.GetOrderItems(orderId).Returns(orderItemModels);
+        var orderItemRepository = Substitute.For<IOrderItemRepository>();
+        orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);
 
-        var sut = new OrderService(orderRepository, customerRepository, orderItemService);
+        var sut = new OrderService(orderRepository, customerRepository, orderItemRepository);
 
         // Act
         var order = await sut.GetOrder(orderId);
@@ -52,9 +52,9 @@ public class OrderServiceTests
         var orderData2 = DataDummies.Order(orderId, peterPan.Id);
         var orderData = DataDummies.Many(orderData1, orderData2);
 
-        var orderItem1 = ModelDummies.OrderItem();
-        var orderItem2 = ModelDummies.OrderItem();
-        var orderItemModels = DataDummies.Collection(orderItem1, orderItem2);
+        var orderItem1 = DataDummies.OrderItem();
+        var orderItem2 = DataDummies.OrderItem();
+        var orderItemData = DataDummies.Collection(orderItem1, orderItem2);
 
         var orderRepository = Substitute.For<IOrderRepository>();
         orderRepository.GetOrdersByDate(default, default).ReturnsForAnyArgs(orderData);
@@ -62,13 +62,13 @@ public class OrderServiceTests
         var customerRepository = Substitute.For<ICustomerRepository>();
         customerRepository.Get(peterPan.Id).Returns(peterPan);
 
-        var orderItemService = Substitute.For<IOrderItemService>();
-        orderItemService.GetOrderItems(orderId).Returns(orderItemModels);
+        var orderItemRepository = Substitute.For<IOrderItemRepository>();
+        orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);
 
         var startDate = DateTime.UtcNow.AddDays(-1);
         var endDate = DateTime.UtcNow;
 
-        var sut = new OrderService(orderRepository, customerRepository, orderItemService);
+        var sut = new OrderService(orderRepository, customerRepository, orderItemRepository);
 
         // Act
         var orders = await sut.GetOrdersByDate(startDate, endDate);

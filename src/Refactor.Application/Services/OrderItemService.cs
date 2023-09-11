@@ -1,32 +1,23 @@
-﻿using Refactor.Application.Models;
-using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Data;
+using Order = Refactor.Application.Models.Order;
 
 namespace Refactor.Application.Services;
 
-public class OrderItemService : IOrderItemService
+public static class OrderItemService
 {
-    private readonly IOrderItemRepository _orderItemRepository;
-
-    public OrderItemService(IOrderItemRepository orderItemRepository)
+    public static OrderItem AddOrderItem(Models.OrderItem orderItem, Order order)
     {
-        _orderItemRepository = orderItemRepository;
+        var orderItemData = MapOrderItem(orderItem, order);
+        return orderItemData;
     }
 
-    public async Task<IReadOnlyCollection<OrderItem>> GetOrderItems(Guid orderId)
+    public static IReadOnlyCollection<Models.OrderItem> GetOrderItems(IEnumerable<OrderItem> orderItems)
     {
-        var orderItemData = await _orderItemRepository.GetByOrderId(orderId);
-        var orderItemModels = orderItemData.Select(MapOrderItem).ToList();
-
+        var orderItemModels = orderItems.Select(MapOrderItem).ToList();
         return orderItemModels;
     }
 
-    public async Task AddOrderItem(OrderItem orderItem, Order order)
-    {
-        var orderItemData = MapOrderItem(orderItem, order);
-        await _orderItemRepository.Add(orderItemData);
-    }
-
-    private static OrderItem MapOrderItem(Data.OrderItem orderItemData)
+    private static Models.OrderItem MapOrderItem(OrderItem orderItemData)
     {
         var netPrice = orderItemData.Price;
         var taxRate = TaxService.DefaultTaxRate;
@@ -36,7 +27,7 @@ public class OrderItemService : IOrderItemService
         var totalNetPrice = netPrice * orderItemData.Quantity;
         var totalGrossPrice = grossPrice * orderItemData.Quantity;
 
-        var model = new OrderItem(
+        var model = new Models.OrderItem(
             orderItemData.Id,
             orderItemData.ProductId,
             Quantity: orderItemData.Quantity,
@@ -49,9 +40,9 @@ public class OrderItemService : IOrderItemService
         return model;
     }
 
-    private static Data.OrderItem MapOrderItem(OrderItem orderItem, Order order)
+    private static OrderItem MapOrderItem(Models.OrderItem orderItem, Order order)
     {
-        var data = new Data.OrderItem(
+        var data = new OrderItem(
             Id: orderItem.Id,
             OrderId: order.Id,
             ProductId: orderItem.ProductId,

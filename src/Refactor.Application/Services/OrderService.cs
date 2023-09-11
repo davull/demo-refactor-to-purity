@@ -6,16 +6,16 @@ namespace Refactor.Application.Services;
 public class OrderService : IOrderService
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly IOrderItemService _orderItemService;
+    private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderRepository _orderRepository;
 
     public OrderService(IOrderRepository orderRepository,
         ICustomerRepository customerRepository,
-        IOrderItemService orderItemService)
+        IOrderItemRepository orderItemRepository)
     {
         _orderRepository = orderRepository;
         _customerRepository = customerRepository;
-        _orderItemService = orderItemService;
+        _orderItemRepository = orderItemRepository;
     }
 
     public async Task<Order> GetOrder(Guid id)
@@ -48,7 +48,9 @@ public class OrderService : IOrderService
     private async Task<Order> GetOrder(Data.Order orderData)
     {
         var customerData = await _customerRepository.Get(orderData.CustomerId);
-        var orderItems = await _orderItemService.GetOrderItems(orderData.Id);
+        var orderItemData = await _orderItemRepository.GetByOrderId(orderData.Id);
+
+        var orderItems = OrderItemService.GetOrderItems(orderItemData);
 
         var customerModel = new Customer(
             customerData.Id,

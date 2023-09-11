@@ -4,6 +4,7 @@ using Refactor.Application.CQRS.Requests;
 using Refactor.Application.Models;
 using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
+using OrderItem = Refactor.Application.Data.OrderItem;
 
 namespace Refactor.Application.Test.CQRS.Handlers;
 
@@ -14,12 +15,12 @@ public class AddOrderHandlerTests
     {
         // Arrange
         var orderService = Substitute.For<IOrderService>();
-        var orderItemService = Substitute.For<IOrderItemService>();
         var customerRepository = Substitute.For<ICustomerRepository>();
+        var orderItemRepository = Substitute.For<IOrderItemRepository>();
 
         customerRepository.Get(default).ReturnsForAnyArgs(DataDummies.ANomymous);
 
-        var sut = new AddOrderHandler(orderService, orderItemService, customerRepository);
+        var sut = new AddOrderHandler(orderService, customerRepository, orderItemRepository);
 
         // Act
         var request = new AddOrderRequest(ModelDummies.Order(
@@ -32,8 +33,8 @@ public class AddOrderHandlerTests
             .Received(1)
             .AddOrder(Arg.Any<Order>());
 
-        await orderItemService
+        await orderItemRepository
             .Received(1)
-            .AddOrderItem(Arg.Any<OrderItem>(), Arg.Any<Order>());
+            .Add(Arg.Any<OrderItem>());
     }
 }

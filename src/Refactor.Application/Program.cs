@@ -45,7 +45,6 @@ public class Program
 
         // Register Services
         services.AddTransient<IOrderService, OrderService>();
-        services.AddTransient<IOrderItemService, OrderItemService>();
 
         return services;
     }

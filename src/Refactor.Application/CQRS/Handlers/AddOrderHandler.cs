@@ -8,16 +8,16 @@ namespace Refactor.Application.CQRS.Handlers;
 public class AddOrderHandler : IRequestHandler<AddOrderRequest>
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly IOrderItemService _orderItemService;
+    private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderService _orderService;
 
     public AddOrderHandler(IOrderService orderService,
-        IOrderItemService orderItemService,
-        ICustomerRepository customerRepository)
+        ICustomerRepository customerRepository,
+        IOrderItemRepository orderItemRepository)
     {
         _orderService = orderService;
-        _orderItemService = orderItemService;
         _customerRepository = customerRepository;
+        _orderItemRepository = orderItemRepository;
     }
 
     public async Task Handle(AddOrderRequest request, CancellationToken cancellationToken)
@@ -31,7 +31,10 @@ public class AddOrderHandler : IRequestHandler<AddOrderRequest>
             throw new InvalidOperationException("Customer is not active.");
 
         foreach (var orderItem in request.Order.Items)
-            await _orderItemService.AddOrderItem(orderItem, request.Order);
+        {
+            var orderItemData = OrderItemService.AddOrderItem(orderItem, request.Order);
+            await _orderItemRepository.Add(orderItemData);
+        }
 
         await _orderService.AddOrder(request.Order);
     }
