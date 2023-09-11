@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Refactor.Application.Logic;
-using Refactor.Application.Models;
 using Refactor.Application.Repositories.Interfaces;
 
 namespace Refactor.Application.Controllers;

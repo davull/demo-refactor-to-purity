@@ -1,5 +1,4 @@
-﻿using Refactor.Application.Models;
-using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
 
 namespace Refactor.Application.Logic;

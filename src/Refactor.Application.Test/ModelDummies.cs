@@ -1,4 +1,4 @@
-﻿using Refactor.Application.Models;
+﻿using Refactor.Application.Logic;
 
 namespace Refactor.Application.Test;
 

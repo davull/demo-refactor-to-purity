@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Refactor.Application.Models;
+using Refactor.Application.Logic;
 using Snapshooter.NUnit;
 using static Refactor.Application.Test.ModelDummies;
 
