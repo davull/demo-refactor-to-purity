@@ -44,7 +44,6 @@ public class Program
         services.AddTransient<IOrderItemRepository, OrderItemRepository>();
 
         // Register Services
-        services.AddSingleton<ITaxService, TaxService>();
         services.AddTransient<IOrderService, OrderService>();
         services.AddTransient<IOrderItemService, OrderItemService>();
 

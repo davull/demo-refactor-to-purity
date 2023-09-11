@@ -21,21 +21,7 @@ public class OrderItemServiceTests
         var orderItemRepository = Substitute.For<IOrderItemRepository>();
         orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);
 
-        var taxService = Substitute.For<ITaxService>();
-
-        taxService.CalculateTax(default, default)
-            .ReturnsForAnyArgs(info =>
-            {
-                var netPrice = info.ArgAt<decimal>(0);
-                var taxRate = info.ArgAt<decimal>(1);
-
-                var taxAmount = netPrice * taxRate / 100m;
-                var grossPrice = netPrice + taxAmount;
-
-                return (taxAmount, grossPrice);
-            });
-
-        var sut = new OrderItemService(orderItemRepository, taxService);
+        var sut = new OrderItemService(orderItemRepository);
 
         // Act
         var orderItems = await sut.GetOrderItems(orderId);

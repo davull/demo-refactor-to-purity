@@ -9,13 +9,8 @@ public class TaxServiceTests
     [TestCase(50, 7.5, 3.75)]
     public void Should_Calculate_Tax(decimal net, decimal rate, decimal expectedTaxAmount)
     {
-        // Arrange
-        var sut = new TaxService();
+        var (taxAmount, _) = TaxService.CalculateTax(net, rate);
 
-        // Act
-        var (taxAmount, _) = sut.CalculateTax(net, rate);
-
-        // Assert
         taxAmount.Should().Be(expectedTaxAmount);
     }
 }

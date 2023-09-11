@@ -6,13 +6,10 @@ namespace Refactor.Application.Services;
 public class OrderItemService : IOrderItemService
 {
     private readonly IOrderItemRepository _orderItemRepository;
-    private readonly ITaxService _taxService;
 
-    public OrderItemService(IOrderItemRepository orderItemRepository,
-        ITaxService taxService)
+    public OrderItemService(IOrderItemRepository orderItemRepository)
     {
         _orderItemRepository = orderItemRepository;
-        _taxService = taxService;
     }
 
     public async Task<IReadOnlyCollection<OrderItem>> GetOrderItems(Guid orderId)
@@ -29,12 +26,12 @@ public class OrderItemService : IOrderItemService
         await _orderItemRepository.Add(orderItemData);
     }
 
-    private OrderItem MapOrderItem(Data.OrderItem orderItemData)
+    private static OrderItem MapOrderItem(Data.OrderItem orderItemData)
     {
         var netPrice = orderItemData.Price;
-        var taxRate = TaxServiceConstants.DefaultTaxRate;
+        var taxRate = TaxService.DefaultTaxRate;
 
-        var (taxAmount, grossPrice) = _taxService.CalculateTax(netPrice, taxRate);
+        var (taxAmount, grossPrice) = TaxService.CalculateTax(netPrice, taxRate);
 
         var totalNetPrice = netPrice * orderItemData.Quantity;
         var totalGrossPrice = grossPrice * orderItemData.Quantity;
