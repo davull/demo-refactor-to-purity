@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NSubstitute;
-using Refactor.Application.Data;
 using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
+using static Refactor.Application.Test.DataDummies;
 
 namespace Refactor.Application.Test.Services;
 
@@ -14,9 +14,9 @@ public class OrderItemServiceTests
         // Arrange
         var orderId = Guid.NewGuid();
 
-        var orderItem1 = new OrderItem(Guid.NewGuid(), orderId, Guid.NewGuid(), 2, 19.75m);
-        var orderItem2 = new OrderItem(Guid.NewGuid(), orderId, Guid.NewGuid(), 3, 9.66m);
-        var orderItemData = new List<OrderItem> { orderItem1, orderItem2 };
+        var orderItem1 = OrderItem(price: 19.75m);
+        var orderItem2 = OrderItem(price: 9.66m);
+        var orderItemData = Collection(orderItem1, orderItem2);
 
         var orderItemRepository = Substitute.For<IOrderItemRepository>();
         orderItemRepository.GetByOrderId(orderId).Returns(orderItemData);

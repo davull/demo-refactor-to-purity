@@ -23,4 +23,23 @@ internal static class DataDummies
         return new Customer(id ?? Guid.NewGuid(),
             firstName, lastName, email, active);
     }
+
+    public static Order Order(Guid? id = null, Guid? customerId = null, DateTime? orderDate = null) =>
+        new(id ?? Guid.NewGuid(), customerId ?? Guid.NewGuid(), orderDate ?? DateTime.UtcNow);
+
+    public static OrderItem OrderItem(Guid? id = null, Guid? orderId = null,
+        Guid? productId = null, int quantity = 1, decimal price = 9.99m)
+    {
+        return new OrderItem(
+            Id: id ?? Guid.NewGuid(),
+            OrderId: orderId ?? Guid.NewGuid(),
+            ProductId: productId ?? Guid.NewGuid(),
+            Quantity: quantity,
+            Price: price);
+    }
+
+
+    public static T[] Many<T>(params T[] items) => items.ToArray();
+
+    public static IReadOnlyCollection<T> Collection<T>(params T[] items) => items.ToList();
 }

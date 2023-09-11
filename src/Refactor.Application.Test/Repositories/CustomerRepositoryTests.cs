@@ -13,7 +13,7 @@ public class CustomerRepositoryTests
     public async Task Should_Only_Return_Active_Customers()
     {
         // Arrange
-        var allCustomers = new[] { JohnDoe, JaneDoe };
+        var allCustomers = Many(JohnDoe, JaneDoe);
         var database = Substitute.For<IDatabase>();
 
         database.GetAll<Customer>()

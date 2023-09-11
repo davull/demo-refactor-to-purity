@@ -23,4 +23,36 @@ internal static class ModelDummies
             lastName: data.LastName,
             email: data.Email);
     }
+
+
+    public static Order Order(Guid? id = null, Customer? customer = null,
+        IReadOnlyCollection<OrderItem>? items = null, DateTime? orderDate = null)
+    {
+        return new Order(
+            Id: id ?? Guid.NewGuid(),
+            Customer: customer ?? Customer(),
+            Items: items ?? Collection(OrderItem(), OrderItem()),
+            OrderDate: orderDate ?? DateTime.UtcNow);
+    }
+
+    public static OrderItem OrderItem(Guid? id = null, Guid? orderId = null,
+        Guid? productId = null, int quantity = 1, decimal netPrice = 9.99m, decimal taxRate = 19m)
+    {
+        var grossPrice = netPrice * (1 + taxRate / 100m);
+
+        return new OrderItem(
+            Id: id ?? Guid.NewGuid(),
+            ProductId: productId ?? Guid.NewGuid(),
+            Quantity: quantity,
+            GrossPrice: grossPrice,
+            NetPrice: netPrice,
+            TaxRate: taxRate,
+            TaxAmount: grossPrice - netPrice,
+            TotalGrossPrice: grossPrice * quantity,
+            TotalNetPrice: netPrice * quantity);
+    }
+
+    public static T[] Many<T>(params T[] items) => items.ToArray();
+
+    public static IReadOnlyCollection<T> Collection<T>(params T[] items) => items.ToList();
 }

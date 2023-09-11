@@ -22,10 +22,9 @@ public class AddOrderHandlerTests
         var sut = new AddOrderHandler(orderService, orderItemService, customerRepository);
 
         // Act
-        var request = new AddOrderRequest(new Order(Guid.NewGuid(),
-            ModelDummies.ANomymous,
-            new[] { new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 119, 100, 19, 19, 119, 100) },
-            DateTime.Now));
+        var request = new AddOrderRequest(ModelDummies.Order(
+            customer: ModelDummies.ANomymous,
+            items: ModelDummies.Collection(ModelDummies.OrderItem())));
         await sut.Handle(request, CancellationToken.None);
 
         // Assert

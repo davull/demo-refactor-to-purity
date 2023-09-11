@@ -42,11 +42,7 @@ public class OrdersControllerTests : IntegrationTestBase
     [Test]
     public async Task Should_Add_Order()
     {
-        var newOrder = new Order(
-            Guid.NewGuid(),
-            PeterPan,
-            new[] { new OrderItem(Guid.NewGuid(), Guid.NewGuid(), 1, 119, 100, 19, 19, 119, 100) },
-            DateTime.Now);
+        var newOrder = Order(customer: PeterPan);
 
         var response = await PostAsync("/orders", newOrder);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
