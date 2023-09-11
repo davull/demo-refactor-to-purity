@@ -14,8 +14,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        RegisterServices(builder.Services)
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+        RegisterServices(builder.Services);
 
         var app = builder.Build();
 
