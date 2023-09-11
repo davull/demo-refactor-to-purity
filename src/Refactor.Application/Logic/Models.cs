@@ -4,15 +4,13 @@ public record Customer(
     Guid Id,
     string FirstName,
     string LastName,
-    string Email) : ModelBase;
-
-public abstract record ModelBase;
+    string Email);
 
 public record Order(
     Guid Id,
     Customer Customer,
     IReadOnlyCollection<OrderItem> Items,
-    DateTime OrderDate) : ModelBase;
+    DateTime OrderDate);
 
 public record OrderItem(
     Guid Id,
@@ -23,4 +21,4 @@ public record OrderItem(
     decimal TaxRate,
     decimal TaxAmount,
     decimal TotalGrossPrice,
-    decimal TotalNetPrice) : ModelBase;
+    decimal TotalNetPrice);
