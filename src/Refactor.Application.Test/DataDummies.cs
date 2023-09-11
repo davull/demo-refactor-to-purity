@@ -1,6 +1,4 @@
-﻿using Refactor.Application.Data;
-
-namespace Refactor.Application.Test;
+﻿namespace Refactor.Application.Test;
 
 internal static class DataDummies
 {

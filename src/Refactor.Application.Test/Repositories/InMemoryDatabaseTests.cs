@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Refactor.Application.Data;
 using Refactor.Application.Repositories;
 using static Refactor.Application.Test.DataDummies;
 

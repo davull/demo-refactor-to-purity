@@ -1,5 +1,4 @@
-﻿using Refactor.Application.Data;
-using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Repositories.Interfaces;
 
 namespace Refactor.Application.Repositories.Implementations;
 

@@ -1,5 +1,4 @@
-﻿using Refactor.Application.Data;
-using Refactor.Application.Models;
+﻿using Refactor.Application.Models;
 
 namespace Refactor.Application.Services;
 
