@@ -9,15 +9,9 @@ namespace Refactor.Application.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IDatabase _db;
-    private readonly OrderItemRepository _orderItemRepository;
-    private readonly OrderRepository _orderRepository;
 
-    public OrdersController(OrderRepository orderRepository,
-        OrderItemRepository orderItemRepository,
-        IDatabase db)
+    public OrdersController(IDatabase db)
     {
-        _orderRepository = orderRepository;
-        _orderItemRepository = orderItemRepository;
         _db = db;
     }
 
@@ -27,8 +21,6 @@ public class OrdersController : ControllerBase
         var result = await OrdersIntegration.GetOrdersByDate(
             startDate ?? DateTime.MinValue,
             endDate ?? DateTime.MaxValue,
-            _orderItemRepository,
-            _orderRepository,
             _db);
         return result;
     }
@@ -36,7 +28,7 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(Order order)
     {
-        await OrdersIntegration.AddOrder(order, _orderItemRepository, _orderRepository, _db);
+        await OrdersIntegration.AddOrder(order, _db);
         return Ok();
     }
 }

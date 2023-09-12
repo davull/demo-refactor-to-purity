@@ -1,25 +1,18 @@
 ﻿namespace Refactor.Application.Repositories;
 
-public class OrderRepository
+public static class OrderRepository
 {
-    private readonly IDatabase _database;
+    public static Task<OrderData> Get(Guid id, IDatabase db) => db.Get<OrderData>(id);
 
-    public OrderRepository(IDatabase database)
-    {
-        _database = database;
-    }
+    public static Task<IEnumerable<OrderData>> GetAll(IDatabase db) => db.GetAll<OrderData>();
 
-    public Task<OrderData> Get(Guid id) => _database.Get<OrderData>(id);
+    public static Task Add(OrderData entity, IDatabase db) => db.Add(entity);
 
-    public Task<IEnumerable<OrderData>> GetAll() => _database.GetAll<OrderData>();
+    public static Task Update(OrderData entity, IDatabase db) => db.Update(entity);
 
-    public Task Add(OrderData entity) => _database.Add(entity);
+    public static Task Delete(OrderData entity, IDatabase db) => db.Delete(entity);
 
-    public Task Update(OrderData entity) => _database.Update(entity);
-
-    public Task Delete(OrderData entity) => _database.Delete(entity);
-
-    public async Task<IEnumerable<OrderData>> GetOrdersByDate(DateTime startDate, DateTime endDate)
-        => (await _database.GetAll<OrderData>())
+    public static async Task<IEnumerable<OrderData>> GetOrdersByDate(DateTime startDate, DateTime endDate, IDatabase db)
+        => (await db.GetAll<OrderData>())
             .Where(x => x.OrderDate >= startDate && x.OrderDate <= endDate);
 }

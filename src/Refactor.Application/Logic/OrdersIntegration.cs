@@ -5,27 +5,17 @@ namespace Refactor.Application.Logic;
 
 public static class OrdersIntegration
 {
-    public static async Task<IEnumerable<Order>> GetOrdersByDate(
-        DateTime startDate, DateTime endDate,
-        OrderItemRepository orderItemRepository,
-        OrderRepository orderRepository,
-        IDatabase db)
+    public static async Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate, IDatabase db)
     {
-        if (orderItemRepository == null)
-            throw new ArgumentNullException(nameof(orderItemRepository));
-
         var orders = await OrderService.GetOrdersByDate(
             startDate, endDate,
-            getOrdersByDate: orderRepository.GetOrdersByDate,
+            getOrdersByDate: (s, e) => OrderRepository.GetOrdersByDate(s, e, db),
             getCustomer: id => CustomerRepository.Get(id, db),
-            getOrderItems: orderItemRepository.GetByOrderId);
+            getOrderItems: id => OrderItemRepository.GetByOrderId(id, db));
         return orders;
     }
 
-    public static async Task AddOrder(Order order,
-        OrderItemRepository orderItemRepository,
-        OrderRepository orderRepository,
-        IDatabase db)
+    public static async Task AddOrder(Order order, IDatabase db)
     {
         if (!order.Items.Any())
             throw new InvalidOperationException("Order must have at least one item.");
@@ -38,9 +28,9 @@ public static class OrdersIntegration
         foreach (var orderItem in order.Items)
         {
             var orderItemData = OrderItemService.AddOrderItem(orderItem, order);
-            await orderItemRepository.Add(orderItemData);
+            await OrderItemRepository.Add(orderItemData, db);
         }
 
-        await OrderService.AddOrder(order, orderRepository.Add);
+        await OrderService.AddOrder(order, o => OrderRepository.Add(o, db));
     }
 }

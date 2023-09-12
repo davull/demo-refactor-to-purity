@@ -34,10 +34,6 @@ public class Program
         // Register database
         services.AddScoped<IDatabase, InMemoryDatabase>();
 
-        // Register Repositories
-        services.AddTransient<OrderRepository>();
-        services.AddTransient<OrderItemRepository>();
-
         return services;
     }
 }
