@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Refactor.Application.Repositories;
-using Refactor.Application.Repositories.Implementations;
 using static Refactor.Application.Test.DataDummies;
 
 namespace Refactor.Application.Test.Repositories;

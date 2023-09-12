@@ -1,6 +1,4 @@
 using Refactor.Application.Repositories;
-using Refactor.Application.Repositories.Implementations;
-using Refactor.Application.Repositories.Interfaces;
 
 namespace Refactor.Application;
 
@@ -38,7 +36,7 @@ public class Program
 
         // Register Repositories
         services.AddTransient<CustomerRepository>();
-        services.AddTransient<IOrderRepository, OrderRepository>();
+        services.AddTransient<OrderRepository>();
         services.AddTransient<OrderItemRepository>();
 
         return services;

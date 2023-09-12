@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Refactor.Application.Logic;
-using Refactor.Application.Repositories.Implementations;
-using Refactor.Application.Repositories.Interfaces;
+using Refactor.Application.Repositories;
 
 namespace Refactor.Application.Controllers;
 
@@ -11,9 +10,9 @@ public class OrdersController : ControllerBase
 {
     private readonly CustomerRepository _customerRepository;
     private readonly OrderItemRepository _orderItemRepository;
-    private readonly IOrderRepository _orderRepository;
+    private readonly OrderRepository _orderRepository;
 
-    public OrdersController(IOrderRepository orderRepository,
+    public OrdersController(OrderRepository orderRepository,
         OrderItemRepository orderItemRepository,
         CustomerRepository customerRepository)
     {

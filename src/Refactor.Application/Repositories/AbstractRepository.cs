@@ -1,8 +1,6 @@
-﻿using Refactor.Application.Repositories.Interfaces;
+﻿namespace Refactor.Application.Repositories;
 
-namespace Refactor.Application.Repositories;
-
-public abstract class AbstractRepository<T> : IRepository<T> where T : IData
+public abstract class AbstractRepository<T> where T : IData
 {
     protected readonly IDatabase _database;
 

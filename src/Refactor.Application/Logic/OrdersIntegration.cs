@@ -1,5 +1,4 @@
-﻿using Refactor.Application.Repositories.Implementations;
-using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Repositories;
 using Refactor.Application.Services;
 
 namespace Refactor.Application.Logic;
@@ -10,7 +9,7 @@ public static class OrdersIntegration
         DateTime startDate, DateTime endDate,
         CustomerRepository customerRepository,
         OrderItemRepository orderItemRepository,
-        IOrderRepository orderRepository)
+        OrderRepository orderRepository)
     {
         if (orderItemRepository == null)
             throw new ArgumentNullException(nameof(orderItemRepository));
@@ -26,7 +25,7 @@ public static class OrdersIntegration
     public static async Task AddOrder(Order order,
         CustomerRepository customerRepository,
         OrderItemRepository orderItemRepository,
-        IOrderRepository orderRepository)
+        OrderRepository orderRepository)
     {
         if (!order.Items.Any())
             throw new InvalidOperationException("Order must have at least one item.");

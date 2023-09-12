@@ -1,4 +1,4 @@
-﻿namespace Refactor.Application.Repositories.Implementations;
+﻿namespace Refactor.Application.Repositories;
 
 public class CustomerRepository : AbstractRepository<CustomerData>
 {
