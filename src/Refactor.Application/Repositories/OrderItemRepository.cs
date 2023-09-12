@@ -2,20 +2,28 @@
 
 public static class OrderItemRepository
 {
-    public static Task<OrderItemData> Get(Guid id, IDatabase db) => db.Get<OrderItemData>(id);
+    public delegate Task AddDelegate(OrderItemData entity);
 
-    public static Task<IEnumerable<OrderItemData>> GetAll(IDatabase db) => db.GetAll<OrderItemData>();
+    public delegate Task DeleteDelegate(OrderItemData entity);
 
-    public static Task Add(OrderItemData entity, IDatabase db) => db.Add(entity);
+    public delegate Task<IEnumerable<OrderItemData>> GetAllDelegate();
 
-    public static Task Update(OrderItemData entity, IDatabase db) => db.Update(entity);
+    public delegate Task<OrderItemData> GetDelegate(Guid id);
 
-    public static Task Delete(OrderItemData entity, IDatabase db) => db.Delete(entity);
+    public delegate Task UpdateDelegate(OrderItemData entity);
 
-    public static async Task<IReadOnlyCollection<OrderItemData>> GetByOrderId(Guid orderId, IDatabase db)
-    {
-        return (await db.GetAll<OrderItemData>())
+    public static Task<OrderItemData> Get(Guid id, GetDelegate get) => get(id);
+
+    public static Task<IEnumerable<OrderItemData>> GetAll(GetAllDelegate getAll) => getAll();
+
+    public static Task Add(OrderItemData entity, AddDelegate add) => add(entity);
+
+    public static Task Update(OrderItemData entity, UpdateDelegate update) => update(entity);
+
+    public static Task Delete(OrderItemData entity, DeleteDelegate delete) => delete(entity);
+
+    public static async Task<IReadOnlyCollection<OrderItemData>> GetByOrderId(Guid orderId, GetAllDelegate getAll)
+        => (await getAll())
             .Where(i => i.OrderId == orderId)
             .ToList();
-    }
 }

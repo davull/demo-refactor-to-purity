@@ -9,9 +9,9 @@ public static class OrdersIntegration
     {
         var orders = await OrderService.GetOrdersByDate(
             startDate, endDate,
-            getOrdersByDate: (s, e) => OrderRepository.GetOrdersByDate(s, e, db),
-            getCustomer: id => CustomerRepository.Get(id, db),
-            getOrderItems: id => OrderItemRepository.GetByOrderId(id, db));
+            getOrdersByDate: (s, e) => OrderRepository.GetOrdersByDate(s, e, db.GetAll<OrderData>),
+            getCustomer: id => CustomerRepository.Get(id, db.Get<CustomerData>),
+            getOrderItems: id => OrderItemRepository.GetByOrderId(id, db.GetAll<OrderItemData>));
         return orders;
     }
 
@@ -20,7 +20,7 @@ public static class OrdersIntegration
         if (!order.Items.Any())
             throw new InvalidOperationException("Order must have at least one item.");
 
-        var customerData = await CustomerRepository.Get(order.Customer.Id, db);
+        var customerData = await CustomerRepository.Get(order.Customer.Id, db.Get<CustomerData>);
 
         if (customerData.Active is false)
             throw new InvalidOperationException("Customer is not active.");
@@ -28,9 +28,9 @@ public static class OrdersIntegration
         foreach (var orderItem in order.Items)
         {
             var orderItemData = OrderItemService.AddOrderItem(orderItem, order);
-            await OrderItemRepository.Add(orderItemData, db);
+            await OrderItemRepository.Add(orderItemData, db.Add);
         }
 
-        await OrderService.AddOrder(order, o => OrderRepository.Add(o, db));
+        await OrderService.AddOrder(order, o => OrderRepository.Add(o, db.Add));
     }
 }
