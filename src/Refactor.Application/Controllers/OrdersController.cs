@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Refactor.Application.Logic;
+using Refactor.Application.Repositories.Implementations;
 using Refactor.Application.Repositories.Interfaces;
 
 namespace Refactor.Application.Controllers;
@@ -8,13 +9,13 @@ namespace Refactor.Application.Controllers;
 [Route("[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly ICustomerRepository _customerRepository;
+    private readonly CustomerRepository _customerRepository;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderRepository _orderRepository;
 
     public OrdersController(IOrderRepository orderRepository,
         IOrderItemRepository orderItemRepository,
-        ICustomerRepository customerRepository)
+        CustomerRepository customerRepository)
     {
         _orderRepository = orderRepository;
         _orderItemRepository = orderItemRepository;

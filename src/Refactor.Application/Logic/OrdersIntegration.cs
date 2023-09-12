@@ -1,4 +1,5 @@
-﻿using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Repositories.Implementations;
+using Refactor.Application.Repositories.Interfaces;
 using Refactor.Application.Services;
 
 namespace Refactor.Application.Logic;
@@ -7,7 +8,7 @@ public static class OrdersIntegration
 {
     public static async Task<IEnumerable<Order>> GetOrdersByDate(
         DateTime startDate, DateTime endDate,
-        ICustomerRepository customerRepository,
+        CustomerRepository customerRepository,
         IOrderItemRepository orderItemRepository,
         IOrderRepository orderRepository)
     {
@@ -20,7 +21,7 @@ public static class OrdersIntegration
     }
 
     public static async Task AddOrder(Order order,
-        ICustomerRepository customerRepository,
+        CustomerRepository customerRepository,
         IOrderItemRepository orderItemRepository,
         IOrderRepository orderRepository)
     {

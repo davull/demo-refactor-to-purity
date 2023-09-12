@@ -37,7 +37,7 @@ public class Program
         services.AddScoped<IDatabase, InMemoryDatabase>();
 
         // Register Repositories
-        services.AddTransient<ICustomerRepository, CustomerRepository>();
+        services.AddTransient<CustomerRepository>();
         services.AddTransient<IOrderRepository, OrderRepository>();
         services.AddTransient<IOrderItemRepository, OrderItemRepository>();
 
