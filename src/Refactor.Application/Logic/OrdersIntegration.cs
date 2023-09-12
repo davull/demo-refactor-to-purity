@@ -9,9 +9,12 @@ public static class OrdersIntegration
     public static async Task<IEnumerable<Order>> GetOrdersByDate(
         DateTime startDate, DateTime endDate,
         CustomerRepository customerRepository,
-        IOrderItemRepository orderItemRepository,
+        OrderItemRepository orderItemRepository,
         IOrderRepository orderRepository)
     {
+        if (orderItemRepository == null)
+            throw new ArgumentNullException(nameof(orderItemRepository));
+
         var orders = await OrderService.GetOrdersByDate(
             startDate, endDate,
             getOrdersByDate: orderRepository.GetOrdersByDate,
@@ -22,7 +25,7 @@ public static class OrdersIntegration
 
     public static async Task AddOrder(Order order,
         CustomerRepository customerRepository,
-        IOrderItemRepository orderItemRepository,
+        OrderItemRepository orderItemRepository,
         IOrderRepository orderRepository)
     {
         if (!order.Items.Any())

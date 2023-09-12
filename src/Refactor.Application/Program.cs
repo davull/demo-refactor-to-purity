@@ -39,7 +39,7 @@ public class Program
         // Register Repositories
         services.AddTransient<CustomerRepository>();
         services.AddTransient<IOrderRepository, OrderRepository>();
-        services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+        services.AddTransient<OrderItemRepository>();
 
         return services;
     }

@@ -1,8 +1,6 @@
-﻿using Refactor.Application.Repositories.Interfaces;
+﻿namespace Refactor.Application.Repositories.Implementations;
 
-namespace Refactor.Application.Repositories.Implementations;
-
-public class OrderItemRepository : AbstractRepository<OrderItemData>, IOrderItemRepository
+public class OrderItemRepository : AbstractRepository<OrderItemData>
 {
     public OrderItemRepository(IDatabase database) : base(database)
     {

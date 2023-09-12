@@ -10,11 +10,11 @@ namespace Refactor.Application.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly CustomerRepository _customerRepository;
-    private readonly IOrderItemRepository _orderItemRepository;
+    private readonly OrderItemRepository _orderItemRepository;
     private readonly IOrderRepository _orderRepository;
 
     public OrdersController(IOrderRepository orderRepository,
-        IOrderItemRepository orderItemRepository,
+        OrderItemRepository orderItemRepository,
         CustomerRepository customerRepository)
     {
         _orderRepository = orderRepository;
