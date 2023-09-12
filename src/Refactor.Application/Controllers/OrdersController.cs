@@ -8,17 +8,17 @@ namespace Refactor.Application.Controllers;
 [Route("[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly CustomerRepository _customerRepository;
+    private readonly IDatabase _db;
     private readonly OrderItemRepository _orderItemRepository;
     private readonly OrderRepository _orderRepository;
 
     public OrdersController(OrderRepository orderRepository,
         OrderItemRepository orderItemRepository,
-        CustomerRepository customerRepository)
+        IDatabase db)
     {
         _orderRepository = orderRepository;
         _orderItemRepository = orderItemRepository;
-        _customerRepository = customerRepository;
+        _db = db;
     }
 
     [HttpGet]
@@ -27,16 +27,16 @@ public class OrdersController : ControllerBase
         var result = await OrdersIntegration.GetOrdersByDate(
             startDate ?? DateTime.MinValue,
             endDate ?? DateTime.MaxValue,
-            _customerRepository,
             _orderItemRepository,
-            _orderRepository);
+            _orderRepository,
+            _db);
         return result;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(Order order, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Add(Order order)
     {
-        await OrdersIntegration.AddOrder(order, _customerRepository, _orderItemRepository, _orderRepository);
+        await OrdersIntegration.AddOrder(order, _orderItemRepository, _orderRepository, _db);
         return Ok();
     }
 }

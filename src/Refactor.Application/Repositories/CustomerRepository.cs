@@ -1,23 +1,16 @@
 ﻿namespace Refactor.Application.Repositories;
 
-public class CustomerRepository
+public static class CustomerRepository
 {
-    private readonly IDatabase _database;
-
-    public CustomerRepository(IDatabase database)
-    {
-        _database = database;
-    }
-
-    public async Task<IEnumerable<CustomerData>> GetAll()
-        => (await _database.GetAll<CustomerData>())
+    public static async Task<IEnumerable<CustomerData>> GetAll(IDatabase db)
+        => (await db.GetAll<CustomerData>())
             .Where(c => c.Active);
 
-    public Task Add(CustomerData entity) => _database.Add(entity);
+    public static Task Add(CustomerData entity, IDatabase db) => db.Add(entity);
 
-    public Task Update(CustomerData entity) => _database.Update(entity);
+    public static Task Update(CustomerData entity, IDatabase db) => db.Update(entity);
 
-    public Task Delete(CustomerData entity) => _database.Delete(entity);
+    public static Task Delete(CustomerData entity, IDatabase db) => db.Delete(entity);
 
-    public Task<CustomerData> Get(Guid id) => _database.Get<CustomerData>(id);
+    public static Task<CustomerData> Get(Guid id, IDatabase db) => db.Get<CustomerData>(id);
 }

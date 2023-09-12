@@ -2,7 +2,7 @@
 
 public static class TaxService
 {
-    public static decimal DefaultTaxRate = 19m;
+    public const decimal DefaultTaxRate = 19m;
 
     public static (decimal taxAmount, decimal grossPrice) CalculateTax(decimal netPrice, decimal taxRate)
     {

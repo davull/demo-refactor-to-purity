@@ -7,9 +7,9 @@ public static class OrdersIntegration
 {
     public static async Task<IEnumerable<Order>> GetOrdersByDate(
         DateTime startDate, DateTime endDate,
-        CustomerRepository customerRepository,
         OrderItemRepository orderItemRepository,
-        OrderRepository orderRepository)
+        OrderRepository orderRepository,
+        IDatabase db)
     {
         if (orderItemRepository == null)
             throw new ArgumentNullException(nameof(orderItemRepository));
@@ -17,20 +17,20 @@ public static class OrdersIntegration
         var orders = await OrderService.GetOrdersByDate(
             startDate, endDate,
             getOrdersByDate: orderRepository.GetOrdersByDate,
-            getCustomer: customerRepository.Get,
+            getCustomer: id => CustomerRepository.Get(id, db),
             getOrderItems: orderItemRepository.GetByOrderId);
         return orders;
     }
 
     public static async Task AddOrder(Order order,
-        CustomerRepository customerRepository,
         OrderItemRepository orderItemRepository,
-        OrderRepository orderRepository)
+        OrderRepository orderRepository,
+        IDatabase db)
     {
         if (!order.Items.Any())
             throw new InvalidOperationException("Order must have at least one item.");
 
-        var customerData = await customerRepository.Get(order.Customer.Id);
+        var customerData = await CustomerRepository.Get(order.Customer.Id, db);
 
         if (customerData.Active is false)
             throw new InvalidOperationException("Customer is not active.");

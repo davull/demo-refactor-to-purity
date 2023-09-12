@@ -17,10 +17,8 @@ public class CustomerRepositoryTests
         database.GetAll<CustomerData>()
             .Returns(allCustomers);
 
-        var sut = new CustomerRepository(database);
-
         // Act
-        var actual = (await sut.GetAll()).ToList();
+        var actual = (await CustomerRepository.GetAll(database)).ToList();
 
         // Assert
         actual.Should().OnlyContain(c => c.Active);
