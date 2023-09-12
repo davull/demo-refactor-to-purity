@@ -1,20 +1,23 @@
 ﻿namespace Refactor.Application.Repositories;
 
-public class OrderItemRepository : AbstractRepository<OrderItemData>
+public class OrderItemRepository
 {
-    public OrderItemRepository(IDatabase database) : base(database)
+    private readonly IDatabase _database;
+
+    public OrderItemRepository(IDatabase database)
     {
+        _database = database;
     }
 
-    public override Task<OrderItemData> Get(Guid id) => _database.Get<OrderItemData>(id);
+    public Task<OrderItemData> Get(Guid id) => _database.Get<OrderItemData>(id);
 
-    public override Task<IEnumerable<OrderItemData>> GetAll() => _database.GetAll<OrderItemData>();
+    public Task<IEnumerable<OrderItemData>> GetAll() => _database.GetAll<OrderItemData>();
 
-    public override Task Add(OrderItemData entity) => _database.Add(entity);
+    public Task Add(OrderItemData entity) => _database.Add(entity);
 
-    public override Task Update(OrderItemData entity) => _database.Update(entity);
+    public Task Update(OrderItemData entity) => _database.Update(entity);
 
-    public override Task Delete(OrderItemData entity) => _database.Delete(entity);
+    public Task Delete(OrderItemData entity) => _database.Delete(entity);
 
     public async Task<IReadOnlyCollection<OrderItemData>> GetByOrderId(Guid orderId)
     {
