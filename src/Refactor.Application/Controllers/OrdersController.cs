@@ -1,7 +1,6 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Refactor.Application.CQRS.Requests;
-using Refactor.Application.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Refactor.Application.Logic;
+using Refactor.Application.Repositories;
 
 namespace Refactor.Application.Controllers;
 
@@ -9,33 +8,27 @@ namespace Refactor.Application.Controllers;
 [Route("[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly ILogger<OrdersController> _logger;
-    private readonly IMediator _mediator;
+    private readonly IDatabase _db;
 
-    public OrdersController(ILogger<OrdersController> logger, IMediator mediator)
+    public OrdersController(IDatabase db)
     {
-        _logger = logger;
-        _mediator = mediator;
+        _db = db;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Order>> Get(DateTime? startDate, DateTime? endDate,
-        CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Order>> Get(DateTime? startDate, DateTime? endDate)
     {
-        var request = new GetOrdersByDateRequest(
+        var result = await OrdersIntegration.GetOrdersByDate(
             startDate ?? DateTime.MinValue,
-            endDate ?? DateTime.MaxValue);
-
-        var result = await _mediator.Send(request, cancellationToken);
+            endDate ?? DateTime.MaxValue,
+            _db);
         return result;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(Order order, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Add(Order order)
     {
-        var request = new AddOrderRequest(order);
-        await _mediator.Send(request, cancellationToken);
-
+        await OrdersIntegration.AddOrder(order, _db);
         return Ok();
     }
 }

@@ -1,8 +1,10 @@
 ﻿namespace Refactor.Application.Services;
 
-public class TaxService : ITaxService
+public static class TaxService
 {
-    public (decimal taxAmount, decimal grossPrice) CalculateTax(decimal netPrice, decimal taxRate)
+    public const decimal DefaultTaxRate = 19m;
+
+    public static (decimal taxAmount, decimal grossPrice) CalculateTax(decimal netPrice, decimal taxRate)
     {
         var taxAmount = netPrice * taxRate / 100m;
         var grossPrice = netPrice + taxAmount;

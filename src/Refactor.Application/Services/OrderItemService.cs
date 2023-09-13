@@ -1,48 +1,35 @@
-﻿using Refactor.Application.Models;
-using Refactor.Application.Repositories.Interfaces;
+﻿using Refactor.Application.Logic;
 
 namespace Refactor.Application.Services;
 
-public class OrderItemService : IOrderItemService
+public static class OrderItemService
 {
-    private readonly IOrderItemRepository _orderItemRepository;
-    private readonly ITaxService _taxService;
-
-    public OrderItemService(IOrderItemRepository orderItemRepository,
-        ITaxService taxService)
+    public static OrderItemData AddOrderItem(OrderItem orderItem, Order order)
     {
-        _orderItemRepository = orderItemRepository;
-        _taxService = taxService;
+        var orderItemData = MapOrderItem(orderItem, order);
+        return orderItemData;
     }
 
-    public async Task<IReadOnlyCollection<OrderItem>> GetOrderItems(Guid orderId)
+    public static IReadOnlyCollection<OrderItem> GetOrderItems(IEnumerable<OrderItemData> orderItems)
     {
-        var orderItemData = await _orderItemRepository.GetByOrderId(orderId);
-        var orderItemModels = orderItemData.Select(MapOrderItem).ToList();
-
+        var orderItemModels = orderItems.Select(MapOrderItem).ToList();
         return orderItemModels;
     }
 
-    public async Task AddOrderItem(OrderItem orderItem, Order order)
+    private static OrderItem MapOrderItem(OrderItemData orderItemDataData)
     {
-        var orderItemData = MapOrderItem(orderItem, order);
-        await _orderItemRepository.Add(orderItemData);
-    }
+        const decimal taxRate = TaxService.DefaultTaxRate;
+        var netPrice = orderItemDataData.Price;
 
-    private OrderItem MapOrderItem(Data.OrderItem orderItemData)
-    {
-        var netPrice = orderItemData.Price;
-        var taxRate = TaxServiceConstants.DefaultTaxRate;
+        var (taxAmount, grossPrice) = TaxService.CalculateTax(netPrice, taxRate);
 
-        var (taxAmount, grossPrice) = _taxService.CalculateTax(netPrice, taxRate);
-
-        var totalNetPrice = netPrice * orderItemData.Quantity;
-        var totalGrossPrice = grossPrice * orderItemData.Quantity;
+        var totalNetPrice = netPrice * orderItemDataData.Quantity;
+        var totalGrossPrice = grossPrice * orderItemDataData.Quantity;
 
         var model = new OrderItem(
-            orderItemData.Id,
-            orderItemData.ProductId,
-            Quantity: orderItemData.Quantity,
+            orderItemDataData.Id,
+            orderItemDataData.ProductId,
+            Quantity: orderItemDataData.Quantity,
             GrossPrice: grossPrice,
             NetPrice: netPrice,
             TaxRate: taxRate,
@@ -52,9 +39,9 @@ public class OrderItemService : IOrderItemService
         return model;
     }
 
-    private static Data.OrderItem MapOrderItem(OrderItem orderItem, Order order)
+    private static OrderItemData MapOrderItem(OrderItem orderItem, Order order)
     {
-        var data = new Data.OrderItem(
+        var data = new OrderItemData(
             Id: orderItem.Id,
             OrderId: order.Id,
             ProductId: orderItem.ProductId,

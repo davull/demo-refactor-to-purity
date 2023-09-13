@@ -1,6 +1,4 @@
-﻿using Refactor.Application.Data;
-
-namespace Refactor.Application.Repositories;
+﻿namespace Refactor.Application.Repositories;
 
 public class InMemoryDatabase : IDatabase
 {
