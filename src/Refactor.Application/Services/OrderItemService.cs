@@ -18,8 +18,8 @@ public static class OrderItemService
 
     private static OrderItem MapOrderItem(OrderItemData orderItemDataData)
     {
+        const decimal taxRate = TaxService.DefaultTaxRate;
         var netPrice = orderItemDataData.Price;
-        var taxRate = TaxService.DefaultTaxRate;
 
         var (taxAmount, grossPrice) = TaxService.CalculateTax(netPrice, taxRate);
 

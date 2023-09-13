@@ -7,11 +7,15 @@ public static class OrdersIntegration
 {
     public static async Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate, IDatabase db)
     {
-        var orders = await OrderService.GetOrdersByDate(
-            startDate, endDate,
-            getOrdersByDate: (s, e) => OrderRepository.GetOrdersByDate(s, e, db.GetAll<OrderData>),
-            getCustomer: id => CustomerRepository.Get(id, db.Get<CustomerData>),
-            getOrderItems: id => OrderItemRepository.GetByOrderId(id, db.GetAll<OrderItemData>));
+        var allOrderData = await db.GetAll<OrderData>();
+
+        var customerData = (await db.GetAll<CustomerData>())
+            .ToDictionary(x => x.Id, x => x);
+
+        var orderData = (await db.GetAll<OrderItemData>())
+            .ToLookup(x => x.OrderId);
+
+        var orders = OrderService.GetOrdersByDate(startDate, endDate, allOrderData, customerData, orderData);
         return orders;
     }
 
@@ -31,6 +35,7 @@ public static class OrdersIntegration
             await OrderItemRepository.Add(orderItemData, db.Add);
         }
 
-        await OrderService.AddOrder(order, o => OrderRepository.Add(o, db.Add));
+        var orderData = OrderService.AddOrder(order);
+        await OrderRepository.Add(orderData, db.Add);
     }
 }
