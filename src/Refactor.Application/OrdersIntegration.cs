@@ -1,7 +1,8 @@
-﻿using Refactor.Application.Repositories;
+﻿using Refactor.Application.Logic;
+using Refactor.Application.Repositories;
 using Refactor.Application.Services;
 
-namespace Refactor.Application.Logic;
+namespace Refactor.Application;
 
 public static class OrdersIntegration
 {
