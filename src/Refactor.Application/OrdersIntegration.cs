@@ -4,28 +4,35 @@ using Refactor.Application.Services;
 
 namespace Refactor.Application;
 
-public static class OrdersIntegration
+public class OrdersIntegration
 {
-    public static async Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate, IDatabase db)
-    {
-        var allOrderData = await db.GetAll<OrderData>();
+    private readonly IDatabase _db;
 
-        var customerData = (await db.GetAll<CustomerData>())
+    public OrdersIntegration(IDatabase db)
+    {
+        _db = db;
+    }
+
+    public async Task<IEnumerable<Order>> GetOrdersByDate(DateTime startDate, DateTime endDate)
+    {
+        var allOrderData = await _db.GetAll<OrderData>();
+
+        var customerData = (await _db.GetAll<CustomerData>())
             .ToDictionary(x => x.Id, x => x);
 
-        var orderData = (await db.GetAll<OrderItemData>())
+        var orderData = (await _db.GetAll<OrderItemData>())
             .ToLookup(x => x.OrderId);
 
         var orders = OrderService.GetOrdersByDate(startDate, endDate, allOrderData, customerData, orderData);
         return orders;
     }
 
-    public static async Task AddOrder(Order order, IDatabase db)
+    public async Task AddOrder(Order order)
     {
         if (!order.Items.Any())
             throw new InvalidOperationException("Order must have at least one item.");
 
-        var customerData = await CustomerRepository.Get(order.Customer.Id, db.Get<CustomerData>);
+        var customerData = await CustomerRepository.Get(order.Customer.Id, _db.Get<CustomerData>);
 
         if (customerData.Active is false)
             throw new InvalidOperationException("Customer is not active.");
@@ -33,10 +40,10 @@ public static class OrdersIntegration
         foreach (var orderItem in order.Items)
         {
             var orderItemData = OrderItemService.AddOrderItem(orderItem, order);
-            await OrderItemRepository.Add(orderItemData, db.Add);
+            await OrderItemRepository.Add(orderItemData, _db.Add);
         }
 
         var orderData = OrderService.AddOrder(order);
-        await OrderRepository.Add(orderData, db.Add);
+        await OrderRepository.Add(orderData, _db.Add);
     }
 }

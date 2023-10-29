@@ -31,8 +31,8 @@ public class Program
 
     private static IServiceCollection RegisterServices(IServiceCollection services)
     {
-        // Register database
         services.AddScoped<IDatabase, InMemoryDatabase>();
+        services.AddScoped<OrdersIntegration>();
 
         return services;
     }

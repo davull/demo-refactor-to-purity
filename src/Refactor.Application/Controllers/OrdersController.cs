@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Refactor.Application.Logic;
-using Refactor.Application.Repositories;
 
 namespace Refactor.Application.Controllers;
 
@@ -8,27 +7,26 @@ namespace Refactor.Application.Controllers;
 [Route("[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly IDatabase _db;
+    private readonly OrdersIntegration _ordersIntegration;
 
-    public OrdersController(IDatabase db)
+    public OrdersController(OrdersIntegration ordersIntegration)
     {
-        _db = db;
+        _ordersIntegration = ordersIntegration;
     }
 
     [HttpGet]
     public async Task<IEnumerable<Order>> Get(DateTime? startDate, DateTime? endDate)
     {
-        var result = await OrdersIntegration.GetOrdersByDate(
+        var result = await _ordersIntegration.GetOrdersByDate(
             startDate ?? DateTime.MinValue,
-            endDate ?? DateTime.MaxValue,
-            _db);
+            endDate ?? DateTime.MaxValue);
         return result;
     }
 
     [HttpPost]
     public async Task<IActionResult> Add(Order order)
     {
-        await OrdersIntegration.AddOrder(order, _db);
+        await _ordersIntegration.AddOrder(order);
         return Ok();
     }
 }
